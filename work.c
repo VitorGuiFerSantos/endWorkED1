@@ -105,8 +105,8 @@ typedef struct _treeB Node;
         root ->rigth = deleteElemnt(root -> rigth, aux -> data -> id);
     }
 
-    int haltleft = (root -> left != NULL ? root->left-> height +1: 0);
-    int haltrigth = (root -> rigth != NULL ? root->rigth-> height+1: 0);
+    int haltleft = (root -> left != NULL ? root->left-> height : 0);
+    int haltrigth = (root -> rigth != NULL ? root->rigth-> height: 0);
     root -> height = (haltleft > haltrigth? haltleft : haltrigth);
     return root;
  }
