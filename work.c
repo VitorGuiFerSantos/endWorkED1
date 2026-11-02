@@ -49,3 +49,54 @@ typedef struct _treeB node;
     new -> rigth = NULL;
     return new;
  }
+  node *addTree(node *root, node *new){
+    if(root == NULL){
+        return new;
+    }
+    if(root->data->id > new->data->id){
+        root -> rigth = addTree(root ->rigth, new);
+    }else{
+        root -> left = addTree(root ->left, new);
+    }
+    int *hr = 0, *hl = 0 ;
+    if(root -> rigth != NULL && root -> left != NULL ){
+        hr =  root -> rigth -> height + 1; 
+        hl =  root -> left -> height + 1;
+        root -> height = (hl > hr ? hl : hr);
+    }else{
+        if(root -> rigth != NULL ){
+            root -> height  =  root -> rigth -> height + 1; 
+
+        }else{
+            if(root -> left != NULL ){
+                root -> height =  root -> left -> height + 1; 
+            }
+        }
+    }
+    return root;  
+ }
+ void printTree(node *aux){
+    if(aux == NULL){
+        return;
+    }
+    printTree(aux -> left);
+    printf(" |%ld|\n", aux->data ->id);
+    printTree(aux -> rigth);
+ }
+int main(){
+    uint64_t id = 1;
+    node *root = malloc( sizeof (node));
+    root = NULL;
+    root = addTree(root, createElemnt("paz"," paz", 2006,4,id));
+    id++;
+    root = addTree(root, createElemnt("paz"," paz", 2006,4,id));
+    id++;
+    root = addTree(root, createElemnt("paz"," paz", 2006,4,id));
+    id++;
+    root = addTree(root, createElemnt("paz"," paz", 2006,4,id));
+    id++;
+    root = addTree(root, createElemnt("paz"," paz", 2006,4,id));
+    id++;
+    printTree(root);
+    return 0;
+}
