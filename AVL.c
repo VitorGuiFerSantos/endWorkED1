@@ -35,28 +35,28 @@ int max(int a, int b){
         |c| <- |b| -> |a|
 */
 node *rotateLL(node *root){
-    // x =|c|<-|b| root = |a| -> |b| -> |c|
-    node *x = root -> left;
-    // |a| = b->|...|
-    root -> left = x->right;
-    //   |b|-> = |a| ->... 
-    x -> right = root;
-    // ...<-|c| <- |b| -> |a| ->....
-    root ->data ->level = 1 + max(height(root-> left) ,height(root-> right));
-    x ->data ->level = 1 + max(height(x-> left) , height(x-> right));
-    return x;
+    node *aux = root -> left;
+    node *temp = aux -> right;
+
+    aux -> right  = root;
+    root->left = temp;
+
+    root -> data -> level = 1 + max(height(root->right),height(root->left));
+    aux -> data -> level = 1 + max(height(aux->right),height(aux->left));
+    
+    return aux;
 }
 node *rotateRR(node *root){
-    // x =|c|<-|b| root = |a| -> |b| -> |c|
-    node *x = root -> right;
-    // |a| = b->|...|
-    root -> right = x->left;
-    //   |b|-> = |a| ->... 
-    x -> left = root;
-    // ...<-|c| <- |b| -> |a| ->....
-    root ->data ->level = 1 + max(height(root-> left), height(root-> right));
-    x ->data ->level = 1 + max(height(x-> left), height(x-> right));
-    return x;
+    node *aux = root -> right;
+    node *temp = aux -> left;
+
+    aux -> left  = root;
+    root->right = temp;
+
+    root -> data -> level = 1 + max(height(root->right),height(root->left));
+    aux -> data -> level = 1 + max(height(aux->right),height(aux->left));
+
+    return aux;
 }
 node *createElemnt(int valor){
     node *new = malloc( sizeof( node));
@@ -73,16 +73,19 @@ node *insertAVL(node *root, node *new){
         return new;
     }
     if(root->data->valor > new->data->valor){
-        root->right = insertAVL(root->right,new);
+        root->left = insertAVL(root->left,new);
     }else{
         if(root ->data->valor < new->data->valor){
-            root->left = insertAVL(root->left,new);
+            root->right = insertAVL(root->right,new);
         }else{
             return root;
         }
     }
+
     root ->data ->level =  1 + max(height(root-> left), height(root-> right));
+
     int fb = getBalance(root);
+    
     if(fb > 1 && new->data->valor < root->left->data->valor){
        return rotateLL(root);
     }
@@ -97,6 +100,7 @@ node *insertAVL(node *root, node *new){
         root -> left = rotateLL(root->right);
         return rotateRR(root);
     }
+    
     return root;
 }
 void printTree(node *aux){
