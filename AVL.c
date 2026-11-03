@@ -58,6 +58,7 @@ node *rotateRR(node *root){
 
     return aux;
 }
+
 node *createElemnt(int valor){
     node *new = malloc( sizeof( node));
     dado *newdata = malloc( sizeof( dado));
@@ -103,6 +104,55 @@ node *insertAVL(node *root, node *new){
     
     return root;
 }
+node *delite(node *root, int ind){
+    if(root == NULL){
+        return root;
+    }
+    if(root->data->valor > ind){
+        root ->left = delite(root ->left,ind);
+    }else{
+        if(root->data->valor < ind){
+            root -> right = delite(root -> right,ind);
+        }
+    }
+    if(root -> data ->valor == ind){
+        if(root->left == NULL){
+            node *aux = root->right;
+            free(root->data);
+            free(root);
+            return aux;
+        }
+        if(root->right == NULL){
+            node *aux = root->left;
+            free(root->data);
+            free(root);
+            return aux;
+        }
+        node *aux = root->right;
+        for(;aux->left !=NULL;aux = aux -> left){};
+        root ->data ->valor = aux -> data -> valor;
+        root->right = delite(root->right, aux -> data ->valor);
+    }
+    root ->data ->level =  1 + max(height(root-> left), height(root-> right));
+
+    int fb = getBalance(root);
+    
+    if(fb > 1 && getBalance(root->left)>=0){
+       return rotateLL(root);
+    }
+    if(fb > 1 && getBalance(root->left) < 0){
+        root -> left = rotateRR(root->left);
+        return rotateLL(root);
+    }
+    if(fb < -1 && getBalance(root->right) <= 0){
+        return rotateRR(root);
+    }
+    if(fb < -1 && getBalance(root->right) > 0){
+        root -> right = rotateLL(root->right);
+        return rotateRR(root);
+    }
+    return root;
+}
 void printTree(node *aux){
     if(aux==NULL){
         return;
@@ -131,10 +181,14 @@ int main(){
     root = insertAVL(root,createElemnt(60));
     root = insertAVL(root,createElemnt(10));
     root = insertAVL(root,createElemnt(40));
-    root = insertAVL(root,createElemnt(50));
+    root = insertAVL(root,createElemnt(49));
+    printTreeLe(root);
+    printf("\n \n");
+    printTree(root);
+    printf("\n \n");
+    
+    root = delite(root,20);
 
-/*     root = deligth(root,20);
- */
     printTreeLe(root);
     printf("\n \n");
     printTree(root);
