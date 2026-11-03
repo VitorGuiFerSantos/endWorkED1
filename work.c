@@ -28,28 +28,102 @@ typedef struct _dados{
 struct _treeB{
     Book *data;
     int height;
-    struct _treeB *rigth;
+    struct _treeB *right;
     struct _treeB *left;
 };
 typedef struct _treeB Node;
+//função ID
+uint64_t newID(uint64_t* ref, uint64_t* p ,uint64_t* n, uint64_t* cont){
+    if( *cont % 2 == 0 || *n == *ref){
+        (*cont)++;
+        (*p)++;
+        return *ref + *p;
+    }
+    (*cont)++;
+    (*n++);
+    return *ref - *n;
+}
+// função que configura a altura do nó
+int height(Node* root){
+    if(root == NULL){
+        return 0;
+    }
+    return root->height;
+}
+int max(int a,int b){
+    return a > b ? a : b;
+}
+//função que garante que a árvore sempre fique balaceada
+int getBalance(Node* root){
+    if(root == NULL){
+        return 0;
+    }
+    return height(root -> left) - height(root -> right
+    
+    );
+}
+//rotate left for right
+Node* rotateRR(Node* root){
+    //the node take on the root
+    Node* aux = root->left;
+    //warden the right son aux
+    Node* temp = aux->right;
+    
+    // root tack on the position of right son
+    aux -> right = root;
+    //how the left son take your position he taje on the right son of aux
+    root -> left = temp;
+    
+    //recalculate the son heights
+    aux->height = 1 + max( height(aux -> left), height(aux -> right) );
+    root->height = 1 + max( height(root -> left), height(root -> right) );
+    
+    //aux take on the roles father thas subtree
+    return aux;
+}
+//rotate right for left
+Node* rotateLL(Node* root){
+    //the node take on the root
+    Node* aux = root->right;
+    //warden the left son aux
+    Node* temp = aux->left;
+    
+    // root tack on the position of left son
+    aux -> left = root;
+    //how the right son take your position he taje on the left son of aux
+    root -> right = temp;
+    
+    //recalculate the son heights
+    aux->height = 1 + max( height(aux -> left), height(aux -> right) );
+    root->height = 1 + max( height(root -> left), height(root -> right) );
+    
+    //aux take on the roles father thas subtree
+    return aux;
+}
 
- Node *createElemnt(char title[], char author[], int year, int amount, uint64_t id){
+Node *createElemnt(char title[], char author[], int year, int amount, uint64_t id){
+
     Book *newdata = malloc( sizeof ( Book ) );
     Node *new = malloc( sizeof ( Node ) );
+
     newdata -> id = id;
     newdata -> year = year; 
     newdata -> amount = amount;
     newdata -> amountLent = 0;
-    memset(newdata -> status, false, sizeof(newdata -> status)); 
+
     strcpy( newdata -> author,author); 
     strcpy( newdata -> title,title); 
+
+    // função que define que todos os livros estão diponível
+    memset(newdata -> status, false, sizeof(newdata -> status)); 
+
     new -> data = newdata;
     new -> height = 0;
     new -> left = NULL;
-    new -> rigth = NULL;
+    new -> right = NULL;
     return new;
  }
- //add elements in the tree
+ //add elements in the tree in a banlance
   Node *addTree(Node *root, Node *new){
     if(root == NULL){
         return new;
@@ -57,23 +131,9 @@ typedef struct _treeB Node;
     if(root->data->id > new->data->id){
         root -> left = addTree(root ->left, new);
     }else{
-        root -> rigth = addTree(root ->rigth, new);
+        root -> right = addTree(root ->right, new);
     }
-    int hr = 0, hl = 0 ;
-    if(root -> rigth != NULL && root -> left != NULL ){
-        hr =  root -> rigth -> height + 1; 
-        hl =  root -> left -> height + 1;
-        root -> height = (hl > hr ? hl : hr);
-    }else{
-        if(root -> rigth != NULL ){
-            root -> height  =  root -> rigth -> height + 1; 
-
-        }else{
-            if(root -> left != NULL ){
-                root -> height =  root -> left -> height + 1; 
-            }
-        }
-    }
+    
     return root;  
  }
  //delele the elements in the tree
@@ -84,39 +144,37 @@ typedef struct _treeB Node;
     if(root -> data -> id > id){
         root -> left = deleteElemnt( root-> left, id);
     }else{
-        root -> rigth = deleteElemnt( root-> rigth, id);
+        root -> right= deleteElemnt( root-> right, id);
     }
     if(root -> data -> id == id){
         if(root -> left == NULL){
-            Node *aux = root -> rigth;
+            Node *aux = root -> right;
             free(root->data);
             free(root);
             return aux;
         }
-        if(root -> rigth == NULL){
+        if(root -> right == NULL){
             Node *aux = root -> left;
             free(root->data);
             free(root);
             return aux;
         }
-        Node *aux = root -> rigth;
+        Node *aux = root -> right;
         for(; aux ->left!= NULL; aux = aux ->left){}
         root ->data = aux -> data;
-        root ->rigth = deleteElemnt(root -> rigth, aux -> data -> id);
+        root ->right= deleteElemnt(root -> right, aux -> data -> id);
     }
-
-    int haltleft = (root -> left != NULL ? root->left-> height : 0);
-    int haltrigth = (root -> rigth != NULL ? root->rigth-> height: 0);
-    root -> height = (haltleft > haltrigth? haltleft : haltrigth);
     return root;
  }
- void printTree(Node *aux){
+ void inOrder(Node *aux){
     if(aux == NULL){
         return;
     }
-    printTree(aux -> left);
+    inOrder(aux -> left);
     printf(" |%ld|", aux -> data->id);
-    printTree(aux -> rigth);
+    inOrder(aux -> right
+    
+    );
  }
  void printTreeHeight(Node *aux){
     if(aux == NULL){
@@ -124,24 +182,22 @@ typedef struct _treeB Node;
     }
     printTreeHeight(aux -> left);
     printf(" |%d|", aux -> height);
-    printTreeHeight(aux -> rigth);
+    printTreeHeight(aux -> right
+    
+    );
  }
 int main(){
-    uint64_t id = 1;
+    //control ID
+    uint64_t ref = 4294967296, idP = 1,ipN = 0, ID, control = 0;
     Node *root = malloc( sizeof (Node));
     root = NULL;
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,id));
-    id++;
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,id));
-    id++;
+    root = addTree(root, createElemnt("paz"," paz", 2006,4,ID));
+    root = addTree(root, createElemnt("paz"," paz", 2006,4,ID));
     root = addTree(root, createElemnt("paz"," paz", 2006,4,8));
-    id++;
     root = addTree(root, createElemnt("paz"," paz", 2006,4,6));
-    id++;
     root = addTree(root, createElemnt("paz"," paz", 2006,4,7));
-    id++;
 
-    printTree(root);
+    inOrder(root);
     printf("\n");
     printTreeHeight(root);
     return 0;
