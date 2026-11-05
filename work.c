@@ -148,6 +148,26 @@ Node* inBalance( Node* root, Node* new){
     
     return root;
 }
+Node* deBalance(Node* root){
+    int fb = getBalance(root);
+    //1°case
+    if(fb > 1){
+        
+    }
+    //2°case
+    if(fb < -1){
+        
+    }
+    //3°case
+    if(fb > 1){
+        
+    }
+    //4°case 
+    if(fb <- 1){
+        
+    }
+    return root;
+}
  //add elements in the tree in a banlance
   Node *addTree(Node *root, Node *new){
     if(root == NULL){
