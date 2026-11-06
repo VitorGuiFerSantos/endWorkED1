@@ -14,7 +14,7 @@ struct _leTre{
 
 typedef struct _leTre node;
 
-int height(node *root){
+int heightBook(node *root){
     if(root == NULL){
         return 0;
     }
@@ -24,7 +24,7 @@ int getBalance(node *root){
     if(root == NULL){
         return 0;
     }
-    return height(root -> left) - height(root -> right);
+    return heightBook(root -> left) - heightBook(root -> right);
 }
 int max(int a, int b){
     return a > b ? a : b;
@@ -41,8 +41,8 @@ node *rotateLL(node *root){
     aux -> right  = root;
     root->left = temp;
 
-    root -> data -> level = 1 + max(height(root->right),height(root->left));
-    aux -> data -> level = 1 + max(height(aux->right),height(aux->left));
+    root -> data -> level = 1 + max(heightBook(root->right),heightBook(root->left));
+    aux -> data -> level = 1 + max(heightBook(aux->right),height(aux->left));
     
     return aux;
 }
@@ -53,8 +53,8 @@ node *rotateRR(node *root){
     aux -> left  = root;
     root->right = temp;
 
-    root -> data -> level = 1 + max(height(root->right),height(root->left));
-    aux -> data -> level = 1 + max(height(aux->right),height(aux->left));
+    root -> data -> level = 1 + max(heightBook(root->right),heightBook(root->left));
+    aux -> data -> level = 1 + max(heightBook(aux->right),heightBook(aux->left));
 
     return aux;
 }
@@ -83,7 +83,7 @@ node *insertAVL(node *root, node *new){
         }
     }
 
-    root ->data ->level =  1 + max(height(root-> left), height(root-> right));
+    root ->data ->level =  1 + max(heightBook(root-> left), heightBook(root-> right));
 
     int fb = getBalance(root);
     
@@ -133,7 +133,7 @@ node *delite(node *root, int ind){
         root ->data ->valor = aux -> data -> valor;
         root->right = delite(root->right, aux -> data ->valor);
     }
-    root ->data ->level =  1 + max(height(root-> left), height(root-> right));
+    root ->data ->level =  1 + max(heightBook(root-> left), heightBook(root-> right));
 
     int fb = getBalance(root);
     
