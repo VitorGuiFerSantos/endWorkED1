@@ -6,7 +6,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <time.h>
-#include "tree.h"
+#include "TAD.h"
 
 
 Node *createElemnt(char title[], char author[], int year, int amount, uint64_t id){
@@ -23,12 +23,13 @@ Node *createElemnt(char title[], char author[], int year, int amount, uint64_t i
     strcpy( newdata -> author,author); 
     strcpy( newdata -> title,title); 
 
-    newdata->bookOcupedUser = NULL;
     
     new -> data = newdata;
     new -> height = 1;
     new -> left = NULL;
     new -> right = NULL;
+    //guarda o endereço dos usuários que estão com o livro
+    new -> wardenU = creatWardenUser(); 
     
     return new;
  }

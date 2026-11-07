@@ -4,6 +4,9 @@ Objetivo desse *README* é fazer um relatório do commit, assim apresentando as 
 
 1. Separar as structs que definem os nó na árvore;
 2. Criar a árvore AVL para o registro de usuários e erros críticos que estavam despecebidos no código AVL
+3. Criação da lista dupĺamente encadeada para o registro de livro/Usuário;
+
+Date: nov/05/2026
 
 ## Separating structs
 &nbsp; Nesse trecho foi separado o parte principal do código em que structs que definem a estrutura das arvore foram colocadas em um arquivo e definido como uma biblioteca externa ao c, e incluida nos arquivos work.c e userBib.c;
@@ -17,3 +20,8 @@ Objetivo desse *README* é fazer um relatório do commit, assim apresentando as 
 
 &nbsp; Um dos erros que mais me chamou atenção foi na hora de apagar a memória, na qual a função delete estava fazendo um double free, isso acontecia porque eu mandava apagar um ponterio duas vezes, ao contrário do que havia visto em sala que verificava o dado, trocava os dados e mandava apagar e não a ref de um ponteiro para apagar duas vezes como estava implementado no código, assim para solucinoar só foi preciso de uma variável auxiliar para fazer a troca como se faz para alterar numa heap.
 
+date: nov/06/2026
+
+## Arbor AVL user and error in the code
+
+&nbsp; O desenvolvimento das funções, criação, inserção, e deleção, para o fim de registro de livros para o usuário que retirou, nesse mesmo inserir esse no livro os usuários que retiraram. Por consequência, a implementção desse registro foi efetuada por meio de uma lista duplamente encadeada, por tanto a inserção desses elementos ocorreu por meio de manipulação de ponteiros, pois passava o endereço do usuários da árvore para uma lista encadeada onde recebia esse ponteiro por referência. Entretanto, para apagar alguns dados tem problema de que deve apagar em uma ordem específica para não perder os dados na hora errada. Por fim, estás foram as principais mudanças/atualizações realizadas no código.
