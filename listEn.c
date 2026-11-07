@@ -57,3 +57,73 @@ ListD_E_book *createLoanUser(int day1,int day2,int month1,int month2,int year1,i
     
     return new;
 }
+void addLoanUser(WdogBook* guardU,ListD_E_book* new){
+    if(guardU -> first == NULL){
+        guardU -> first = new;
+        guardU -> last = new;
+        return;
+    }
+    ListD_E_book* aux = guardU -> first;
+    for(; aux != NULL; aux = aux -> next){
+        int comp = strcmp( new -> data -> gmail, aux -> data -> gmail);
+        // break when o 
+        if(comp < 0){
+            break;
+        }
+    }
+    //1°case last of elements
+    if(aux == NULL){
+        guardU -> last -> next = new;
+        new -> prev = aux;
+        guardU -> last = new;
+        return;
+    }
+    //2°case first of elements
+
+    if(aux -> prev == NULL){
+        new -> next = aux;
+        aux -> prev = new;
+        guardU -> first = new;
+        return;
+    }
+    //3°case quite of elements
+    new -> next = aux;
+    new -> prev = aux -> prev;
+    aux -> prev -> next = new;
+    aux -> prev = new;
+}
+void addLoanBook(WDogUser* guardU,ListD_E_user* new){
+    if(guardU -> first == NULL){
+        guardU -> first = new;
+        guardU -> last = new;
+        return;
+    }
+    ListD_E_user* aux = guardU -> first;
+    for(; aux != NULL; aux = aux -> next){
+        int comp = strcmp( new -> data ->title , aux -> data -> title);
+        // break when o 
+        if(comp < 0){
+            break;
+        }
+    }
+    //1°case last of elements
+    if(aux == NULL){
+        guardU -> last -> next = new;
+        new -> prev = aux;
+        guardU -> last = new;
+        return;
+    }
+    //2°case first of elements
+
+    if(aux -> prev == NULL){
+        new -> next = aux;
+        aux -> prev = new;
+        guardU -> first = new;
+        return;
+    }
+    //3°case quite of elements
+    new -> next = aux;
+    new -> prev = aux -> prev;
+    aux -> prev -> next = new;
+    aux -> prev = new;
+}

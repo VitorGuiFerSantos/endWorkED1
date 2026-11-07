@@ -35,8 +35,8 @@ struct _l_E_B{
 typedef struct _l_E_B ListD_E_book;
 //endereço dos livros
 typedef struct _wactherBook{
-    struct ListD_E_book* first;
-    struct ListD_E_book* last;
+    ListD_E_book* first;
+    ListD_E_book* last;
 }WdogBook;
 
 struct _lE_User{
@@ -49,8 +49,8 @@ struct _lE_User{
 typedef struct _lE_User ListD_E_user;
 
 typedef struct _wacther_User{
-    struct ListD_E_user* first;
-    struct ListD_E_user* last;
+    ListD_E_user* first;
+    ListD_E_user* last;
 }WDogUser;
 
 
