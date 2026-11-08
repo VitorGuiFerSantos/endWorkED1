@@ -20,7 +20,7 @@ ListD_E_user *createLoanUser(int day1,int day2,int month1,int month2,int year1,i
     newdateE -> month = month2;
 
     newdateS -> year = year1;
-    newdateS -> year = year2;
+    newdateE -> year = year2;
     
     new -> loanSt = newdateS;
     new -> loanEnd = newdateE;
@@ -45,7 +45,7 @@ ListD_E_book *createLoanUser(int day1,int day2,int month1,int month2,int year1,i
     newdateE -> month = month2;
 
     newdateS -> year = year1;
-    newdateS -> year = year2;
+    newdateE -> year = year2;
     
     new -> loanSt = newdateS;
     new -> loanEnd = newdateE;
@@ -74,7 +74,7 @@ void addLoanUser(WdogBook* guardU,ListD_E_book* new){
     //1°case last of elements
     if(aux == NULL){
         guardU -> last -> next = new;
-        new -> prev = aux;
+        new -> prev = guardU -> last;
         guardU -> last = new;
         return;
     }
@@ -109,7 +109,7 @@ void addLoanUser(WdogBook* guardU,ListD_E_book* new){
     //1°case last of elements
     if(aux == NULL){
         guardU -> last -> next = new;
-        new -> prev = aux;
+        new -> prev = guardU -> last;
         guardU -> last = new;
         return;
     }
@@ -207,11 +207,14 @@ void returnLoanBook(WdogBook *copUs,User* tome){
 
     }
 }
-void removeAllUser(WdogBook *copUs){
+void removeAllUser(WdogBook *copUs,Book *tome){
     ListD_E_book *aux = copUs ->first, *ant;
     while (aux != NULL){
         ant = aux;
         aux = aux -> next;
+        //criar uma função de BST para buscar os livros empresatdos para usuário
+        //passo os dados do usuário para procurar na árvore depois ocupa os dados 
+        //do livro para fazer a remoção na lista encadeada para depois remover na outra lista
         returnLoanBook(copUs,ant);
     }
 }

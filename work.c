@@ -29,7 +29,7 @@ Node *createElemnt(char title[], char author[], int year, int amount, uint64_t i
     new -> left = NULL;
     new -> right = NULL;
     //guarda o endereço dos usuários que estão com o livro
-    new -> wardenU = creatWardenUser(); 
+    new -> wardenU = creatWardenBook(); 
     
     return new;
  }
