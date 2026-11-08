@@ -24,24 +24,24 @@ typedef struct _dados_book{
     int amount;
     int amountLent;
 }Book;
-
+//lista encadeada que guarda o endereço dos usuarios que retiraram o livro
 struct _l_E_B{
-    Date *loanSt;
-    Date *loanEnd;
-    User *data;
+    Date* loanSt;
+    Date* loanEnd;
+    User* data;
     struct _l_E_B *next;
     struct _l_E_B *prev;
 };
 typedef struct _l_E_B ListD_E_book;
-//endereço dos livros
+
 typedef struct _wactherBook{
     ListD_E_book* first;
     ListD_E_book* last;
 }WdogBook;
-
+// lista encadeada que guarda os livros que o usuário retirou 
 struct _lE_User{
-    Date *loanSt;
-    Date *loanEnd;
+    Date* loanSt;
+    Date* loanEnd;
     Book* data;
     struct _lE_User *next;
     struct _lE_User *prev;

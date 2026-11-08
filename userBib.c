@@ -75,7 +75,6 @@ userTree *creatUser(char member[],char gmail[]){
     strcpy(newdata -> gmail , gmail);
     new -> data =  newdata;
     new-> height = 1;
-    
     // guardo o endereço dos livros 
     new -> wardenB = creatWardenBook();
 

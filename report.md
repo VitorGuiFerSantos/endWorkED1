@@ -22,6 +22,10 @@ Date: nov/05/2026
 
 date: nov/06/2026
 
-## Arbor AVL user and error in the code
+## list doubly for the registry
 
 &nbsp; O desenvolvimento das funções, criação, inserção, e deleção, para o fim de registro de livros para o usuário que retirou, nesse mesmo inserir esse no livro os usuários que retiraram. Por consequência, a implementção desse registro foi efetuada por meio de uma lista duplamente encadeada, por tanto a inserção desses elementos ocorreu por meio de manipulação de ponteiros, pois passava o endereço do usuários da árvore para uma lista encadeada onde recebia esse ponteiro por referência. Entretanto, para apagar alguns dados tem problema de que deve apagar em uma ordem específica para não perder os dados na hora errada. Por fim, estás foram as principais mudanças/atualizações realizadas no código.
+
+date: nov/07/2026
+
+&nbsp;  Implementação das estruturas de devolução do livro/usuário, para além disso foi também desenvolvido a função de que quando um usuário ou livro é removido remove todos os registros desse para não ter o vazamento de memória

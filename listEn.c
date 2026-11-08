@@ -92,15 +92,15 @@ void addLoanUser(WdogBook* guardU,ListD_E_book* new){
     aux -> prev -> next = new;
     aux -> prev = new;
 }
-void addLoanBook(WDogUser* guardU,ListD_E_user* new){
+void addLoanUser(WdogBook* guardU,ListD_E_book* new){
     if(guardU -> first == NULL){
         guardU -> first = new;
         guardU -> last = new;
         return;
     }
-    ListD_E_user* aux = guardU -> first;
+    ListD_E_book* aux = guardU -> first;
     for(; aux != NULL; aux = aux -> next){
-        int comp = strcmp( new -> data ->title , aux -> data -> title);
+        int comp = strcmp( new -> data -> gmail, aux -> data -> gmail);
         // break when o 
         if(comp < 0){
             break;
@@ -126,4 +126,100 @@ void addLoanBook(WDogUser* guardU,ListD_E_user* new){
     new -> prev = aux -> prev;
     aux -> prev -> next = new;
     aux -> prev = new;
+}
+void returnLoanUser(WDogUser *copUs,Book* tome){
+    if(copUs -> first == NULL){
+        return;
+    }
+    ListD_E_user* aux = copUs -> first;
+    for(;aux != NULL; aux = aux ->next ){
+        int comp = strcmp(aux -> data -> title,tome -> title);
+        if(comp == 0){
+            if(aux -> next == NULL && aux ->prev == NULL){
+                copUs -> first = NULL;
+                copUs -> last = NULL;
+                free(aux);
+                return;
+            }
+            if(aux -> prev == NULL){
+                copUs ->first = aux -> next; 
+                aux -> next -> prev = NULL;
+                free(aux);
+                return;
+            }
+            if(aux -> next == NULL){
+                copUs -> last = aux -> prev;
+                copUs->last->next = NULL;
+                free(aux);
+                return;
+            }
+            aux -> prev -> next = aux -> next;
+            aux -> next -> prev = aux -> prev;
+            aux -> next = NULL;
+            aux -> prev = NULL;
+            free(aux);
+            return;
+        }
+
+    }
+}
+void returnLoanBook(WdogBook *copUs,User* tome){
+    if(copUs -> first == NULL){
+        return;
+    }
+    ListD_E_book* aux = copUs;
+    for(;aux != NULL; aux = aux ->next ){
+        int comp = strcmp(aux -> data -> gmail,tome -> gmail);
+        if(comp == 0){
+            if(aux -> next == NULL && aux ->prev == NULL){
+                copUs -> first = NULL;
+                copUs -> last = NULL;
+                free(aux ->loanEnd);
+                free(aux ->loanSt);
+                free(aux);
+                return;
+            }
+            if(aux -> prev == NULL){
+                copUs ->first = aux -> next; 
+                aux -> next -> prev = NULL;
+                free(aux -> loanEnd);
+                free(aux -> loanSt);
+                free(aux);
+                return;
+            }
+            if(aux -> next == NULL){
+                copUs -> last = aux -> prev;
+                copUs->last->next = NULL;
+                free(aux -> loanEnd);
+                free(aux -> loanSt);
+                free(aux);
+                return;
+            }
+            aux -> prev -> next = aux -> next;
+            aux -> next -> prev = aux -> prev;
+            aux -> next = NULL;
+            aux -> prev = NULL;
+            free(aux -> loanEnd);
+            free(aux -> loanSt);
+            free(aux);
+            return;
+        }
+
+    }
+}
+void removeAllUser(WdogBook *copUs){
+    ListD_E_book *aux = copUs ->first, *ant;
+    while (aux != NULL){
+        ant = aux;
+        aux = aux -> next;
+        returnLoanBook(copUs,ant);
+    }
+}
+void removeAllBook(WDogUser *copUs){
+    ListD_E_user *aux = copUs ->first, *ant;
+    while (aux != NULL){
+        ant = aux;
+        aux = aux -> next;
+        returnLoanUser(copUs, ant);
+    }
 }
