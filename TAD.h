@@ -92,7 +92,7 @@ WDogUser *creatWardenBook(){
 
     return warden;
 }
-ListD_E_user *createLoanUser(int day1,int day2,int month1,int month2,int year1,int year2, User* data){
+ListD_E_user *createLoanUser(int day1,int day2,int month1,int month2,int year1,int year2, Book* data){
     ListD_E_user* new = malloc(sizeof(ListD_E_user));
     Date* newdateS =  malloc(sizeof(Date));
     Date* newdateE =  malloc(sizeof(Date));
@@ -117,7 +117,7 @@ ListD_E_user *createLoanUser(int day1,int day2,int month1,int month2,int year1,i
     return new;
     
 }// registro o endereço do livro para o usuario
-ListD_E_book *createLoanUser(int day1,int day2,int month1,int month2,int year1,int year2, Book* data){
+ListD_E_book *createLoanBook(int day1,int day2,int month1,int month2,int year1,int year2, User* data){
     ListD_E_book* new = malloc(sizeof(ListD_E_book));
     Date* newdateS =  malloc(sizeof(Date));
     Date* newdateE =  malloc(sizeof(Date));
@@ -176,7 +176,7 @@ void addLoanUser(WdogBook* guardU,ListD_E_book* new){
     aux -> prev -> next = new;
     aux -> prev = new;
 }
-void addLoanUser(WdogBook* guardU,ListD_E_book* new){
+void addLoanBook(WdogBook* guardU,ListD_E_book* new){
     if(guardU -> first == NULL){
         guardU -> first = new;
         guardU -> last = new;
@@ -248,10 +248,10 @@ void returnLoanUser(WDogUser *copUs,Book* tome){
     }
 }
 void returnLoanBook(WdogBook *copUs,User* tome){
-    if(copUs -> first == NULL){
+    if(copUs -> first  == NULL){
         return;
     }
-    ListD_E_book* aux = copUs;
+    ListD_E_book* aux  = copUs ->first;
     for(;aux != NULL; aux = aux ->next ){
         int comp = strcmp(aux -> data -> gmail,tome -> gmail);
         if(comp == 0){
@@ -291,7 +291,7 @@ void returnLoanBook(WdogBook *copUs,User* tome){
 
     }
 }
-void BSTuser(userTree *root, User *member, Book *item){
+void BSTuserDe(userTree *root, User *member, Book *item){
     if(root == NULL){
         return;
     }
@@ -301,15 +301,15 @@ void BSTuser(userTree *root, User *member, Book *item){
         return;
     }
     if(comp > 0){
-        BSTuser(root -> left,member, item);
+        BSTuserDe(root -> left,member, item);
     }else{
         if(comp < 0){
-            BSTuser(root -> right,member, item);
+            BSTuserDe(root -> right,member, item);
         }
         return;
     }
  }
- void BSTBook(Node *root, Book *element, User *item){
+ void BSTBookDe(Node *root, Book *element, User *item){
      if(root == NULL){
         return;
     }
@@ -318,10 +318,10 @@ void BSTuser(userTree *root, User *member, Book *item){
         return;
     }
     if(root ->data ->id > element -> id){
-        BSTBook(root -> left,element, item);
+        BSTBookDe(root -> left,element, item);
     }else{
         if(root ->data -> id < element -> id){
-            BSTBook(root -> right,element, item);
+            BSTBookDe(root -> right,element, item);
         }
         return;
     }
@@ -334,7 +334,7 @@ void removeAllUser(WdogBook *copUs,Book *tome, Node* rootBo){
         //criar uma função de BST para buscar os livros empresatdos para usuário
         //passo os dados do usuário para procurar na árvore depois ocupa os dados 
         //do livro para fazer a remoção na lista encadeada para depois remover na outra lista
-        BSTBook( rootBo, tome, ant->data);
+        BSTBookDe( rootBo, tome, ant->data);
         returnLoanBook(copUs,ant->data);
     }
 }
@@ -343,7 +343,7 @@ void removeAllBook(WDogUser *copBo,User* people, userTree* rootUs){
     while (aux != NULL){
         ant = aux;
         aux = aux -> next;
-        BSTuser(rootUs, people, ant->data);
+        BSTuserDe(rootUs, people, ant->data);
         returnLoanUser(copBo, ant->data);
     }
 }

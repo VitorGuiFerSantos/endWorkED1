@@ -76,7 +76,8 @@ userTree *creatUser(char member[],char gmail[]){
     new -> data =  newdata;
     new-> height = 1;
     // guardo o endereço dos livros 
-    new -> wardenB = creatWardenUser();
+    WDogUser* wardenB = creatWardenBook();
+    new -> wardenB = wardenB;
 
     new -> left = NULL;
     new -> right = NULL;
