@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <inttypes.h> // permite imprimir uint64_t com PRIu64 . (CONFERIR SE TA CERTO (VI NA NET))
+#include <inttypes.h> // permite imprimir uint64_t com PRIu64 . (CONFERIR SE TA CERTO (VI NA NET)
 #include <math.h>
 #include <time.h>
 
