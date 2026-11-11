@@ -29,3 +29,7 @@ date: nov/06/2026
 date: nov/07/2026
 
 &nbsp;  Implementação das estruturas de devolução do livro/usuário, para além disso foi também desenvolvido a função de que quando um usuário ou livro é removido remove todos os registros desse para não ter o vazamento de memória
+
+date:nov/08/2026 - nov/11/2026 
+
+&nbsp; Nesse periódo foi separdo estruturas por arquivo .h verificando cada etapa do processo da biblioteca pensando primeiro em adicionar elementos e depois remover, então foi criado as funções de adição, após isso foi pensado na ideia de fazer com que as listas encadeadas usem ponteiros cruzado fazendo a busca instantânea assim a remoção de elementos de forma eficiente;

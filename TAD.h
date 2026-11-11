@@ -4,7 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <stdint.h>
+#include <math.h>
+#include <unistd.h>
+#include <inttypes.h>
+#include <time.h>
 typedef struct _time_D{
     int day;
     int month;
@@ -26,10 +31,14 @@ typedef struct _dados_book{
     int amountLent;
 }Book;
 //lista encadeada que guarda o endereço dos usuarios que retiraram o livro
+struct _l_E_B;
+struct _lE_User;
+
 struct _l_E_B{
     Date* loanSt;
     Date* loanEnd;
     User* data;
+    struct _lE_User *correspondingLoan;
     struct _l_E_B *next;
     struct _l_E_B *prev;
 };
@@ -44,6 +53,7 @@ struct _lE_User{
     Date* loanSt;
     Date* loanEnd;
     Book* data;
+    struct _l_E_B *correspondingLoan;
     struct _lE_User *next;
     struct _lE_User *prev;
 };
@@ -86,92 +96,63 @@ uint64_t newID(uint64_t* ref, uint64_t* p ,uint64_t* n, uint64_t* cont){
     (*n)++;
     return *ref - *n;
 }
-//lista encadeada para registrar os livros no usuário
-
-
-// registro o endereço do livro para o usuario
-ListD_E_user *createLoanUser(Date* newdateS,Date* newdateE, User* data){
-    ListD_E_user* new = malloc(sizeof(ListD_E_user));
-
-    new -> loanSt = newdateS;
-    new -> loanEnd = newdateE;
-    
-    new -> data = data;
-
-    new -> next = NULL; 
-    new -> prev = NULL; 
-    
-    return new;
+int yearLeap(int year){
+    return (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0));
 }
-void addLoanUser(WDogUser* guardU,ListD_E_user* new){
-    if(guardU -> first == NULL){
-        guardU -> first = new;
-        guardU -> last = new;
-        return;
+Date* returnDate(int day, int month,int year){
+    int day1 = day,month1 = month, year1 = year; 
+    int diasMes[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    Date* end = malloc(sizeof(Date));
+    if(yearLeap(year)){
+        diasMes[2] = 29;
     }
-    ListD_E_user* aux = guardU -> first;
-    for(; aux != NULL; aux = aux -> next){
-        int comp = strcmp( new -> data -> gmail, aux -> data -> gmail);
-        if(comp < 0){
-            break;
+
+    day1 += 10;
+
+    while(day1 > diasMes[month1]){
+        day1 -= diasMes[month1];
+        month1++;
+
+        if(month1 > 12){
+            month1= 1;
+            year1++;
+
+            diasMes[2] = yearLeap(year1) ? 29 : 28;
         }
     }
-    //1°case last of elements
-    if(aux == NULL){
-        guardU -> last -> next = new;
-        new -> prev = guardU -> last;
-        guardU -> last = new;
-        return;
-    }
-
-    //2°case first of elements
-    if(aux -> prev == NULL){
-        new -> next = aux;
-        aux -> prev = new;
-        guardU -> first = new;
-        return;
-    }
-
-    //3°case quite of elements
-    new -> next = aux;
-    new -> prev = aux -> prev;
-    aux -> prev -> next = new;
-    aux -> prev = new;
+    end -> day = day1;
+    end -> month = month1; 
+    end -> year = year1; 
+    return end;
 }
-void addLoanBook(WDogBook* guardU,ListD_E_Book* new){
-    if(guardU -> first == NULL){
-        guardU -> first = new;
-        guardU -> last = new;
-        return;
-    }
-    ListD_E_Book* aux = guardU -> first;
-    for(; aux != NULL; aux = aux -> next){
-        int comp = strcmp( new -> data -> title, aux -> data -> title);
-        // break when o 
-        if(comp < 0){
-            break;
-        }
-    }
-    //1°case last of elements
-    if(aux == NULL){
-        guardU -> last -> next = new;
-        new -> prev = guardU -> last;
-        guardU -> last = new;
-        return;
-    }
-    //2°case first of elements
+int dateToDays(int day, int month, int year){
+    int diasMes[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-    if(aux -> prev == NULL){
-        new -> next = aux;
-        aux -> prev = new;
-        guardU -> first = new;
-        return;
+    if(yearLeap(year)){
+        diasMes[2] = 29;
     }
-    //3°case quite of elements
-    new -> next = aux;
-    new -> prev = aux -> prev;
-    aux -> prev -> next = new;
-    aux -> prev = new;
+
+    int total = day;
+
+    for(int i = 1; i < month; i++){
+        total += diasMes[i];
+    }
+
+    total += year * 365;
+    total += year / 4 - year / 100 + year / 400;
+
+    return total;
+}
+bool isLate(Date *end, Date *today){
+    int endDays = dateToDays(end->day, end->month, end->year);
+
+    int todayDays = dateToDays(today->day, today->month, today->year);
+
+    return todayDays > endDays;
+}
+void printDate(Date* day){
+    printf("%02d/%02d/%04d",day -> day, day -> month, day ->year);
+
 }
 /* void returnLoanUser(WDogUser *copUs,User* tome){
     if(copUs -> first == NULL){
@@ -318,7 +299,7 @@ void printWDogBook(WDogBook* wardenB){
     ListD_E_Book* aux = wardenB ->first;
     printf("\n+----------------------------------+\n");
     for(;aux!=NULL;aux = aux -> next){
-        printf("\n|%ld\t\t|",aux ->data -> id);
+        printf("\n|%"PRIu64"\t\t|",aux ->data -> id);
         printf("\n|%s\t|",aux ->data -> title);
         printf("\n|%s\t\t|",aux ->data -> author);
         printf("\n|%d\t\t|\n",aux ->data -> year);

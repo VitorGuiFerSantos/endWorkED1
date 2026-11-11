@@ -5,6 +5,10 @@
 #include <string.h>
 #include <stdbool.h>
 #include "TAD.h"
+#include <inttypes.h>
+#include "listEnB.h"
+#include "listEnU.h"
+
 int heightUser(userTree* root){
     if(root == NULL){
         return 0;
@@ -126,7 +130,7 @@ userTree *creatUser(userTree* rootU){
 
     new-> height = 1;
     // cop the address books retired
-    new -> wardenB = creatWardenBook();;
+    new -> wardenB = creatWardenBook();
 
     new -> left = NULL;
     new -> right = NULL;

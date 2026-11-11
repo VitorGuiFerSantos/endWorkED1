@@ -3,6 +3,7 @@
 #include "TAD.h"
 #include "listEnB.h"
 #include "listEnU.h"
+#include <inttypes.h>
 int heightBook(treeBook* root){
     if(root == NULL){
         return 0;
@@ -185,7 +186,7 @@ treeBook *deleteBook(treeBook *root, int id){
 void printTreeBook(treeBook* nodo){
     if(nodo == NULL) return;
 
-    printf("\n\t\t|ID: %ld\t\t\t\t|",nodo ->data -> id);
+    printf("\n\t\t|ID: %" PRIu64 "\t\t\t\t|",nodo ->data -> id);
     printf("\n\t\t|Título: %s\t\t\t\t|",nodo ->data -> title);
     printf("\n\t\t|Autor: %s\t\t\t\t|",nodo ->data -> author);
     printf("\n\t\t|Ano de publicação: %d\t\t|",nodo ->data -> year);

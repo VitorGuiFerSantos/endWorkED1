@@ -5,14 +5,12 @@
 #include <stdint.h>
 #include <math.h>
 #include <unistd.h>
+#include <inttypes.h>
 #include <time.h>
 #include "TAD.h"
 #include "AVL_B.h"
 #include "AVL_U.h"
 #include "loan.h"
-
-
-
 int main(){
     //control ID
     int c;
@@ -108,7 +106,7 @@ int main(){
                     if(escolha2 == 1){
                         uint64_t cod;
                         printf("\n\t\tDigite o código do livro:  ");
-                        scanf("%ld", & cod); 
+                        scanf("%"SCNu64, & cod); 
                         tempoB = searchIdBook(rootBook,cod);
                         if(tempoB == NULL){
                             printf("\n|\t Livro não encontrado \t|\n");
