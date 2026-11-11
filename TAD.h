@@ -71,38 +71,25 @@ struct _treeB{
     WDogUser *wardenU;
 };
 typedef struct _treeB treeBook;
+
+int max(int a,int b){
+    return a > b ? a : b;
+}
+//create ID for book
+uint64_t newID(uint64_t* ref, uint64_t* p ,uint64_t* n, uint64_t* cont){
+    if( *cont % 2 == 0 || *n == *ref){
+        (*cont)++;
+        (*p)++;
+        return *ref + *p;
+    }
+    (*cont)++;
+    (*n)++;
+    return *ref - *n;
+}
 //lista encadeada para registrar os livros no usuário
-WDogBook *creatWardenBook(){
-    WDogBook* warden = malloc(sizeof(WDogBook));
 
-    warden -> first = NULL;
-    warden -> last = NULL;
 
-    return warden;
-}
-WDogUser *creatWardenUser(){
-    WDogUser* warden = malloc(sizeof(WDogUser));
-    
-    warden -> first = NULL;
-    warden -> last = NULL;
-
-    return warden;
-}
-ListD_E_Book *createLoanBook(Date* newdateS,Date* newdateE, Book* data){
-    ListD_E_Book* new = malloc(sizeof(ListD_E_Book));
-
-    
-    new -> loanSt = newdateS;
-    new -> loanEnd = newdateE;
-    
-    new -> data = data;
-
-    new -> next = NULL; 
-    new -> prev = NULL; 
-    
-    return new;
-    
-}// registro o endereço do livro para o usuario
+// registro o endereço do livro para o usuario
 ListD_E_user *createLoanUser(Date* newdateS,Date* newdateE, User* data){
     ListD_E_user* new = malloc(sizeof(ListD_E_user));
 

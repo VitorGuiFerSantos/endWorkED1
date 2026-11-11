@@ -68,6 +68,22 @@ userTree* balanceUser(userTree *root){
     return root;
 }
 
+//return one user
+userTree* searchCopyUser(userTree* rootU,char gmail[]){
+   if(rootU == NULL){
+       return NULL;
+   }
+   int com = strcmp(rootU -> data ->gmail, gmail);
+   if(com == 0){
+       return rootU;
+   }
+   if(com < 0){
+       return searchCopyUser(rootU -> right,gmail);
+   }else{
+       return searchCopyUser(rootU -> left,gmail);
+   }
+}
+
 userTree *creatUser(userTree* rootU){
     User* newdata = malloc( sizeof (User));
     userTree* new = malloc( sizeof (userTree));
@@ -184,6 +200,31 @@ void printTreeUser(userTree* nodo){
     printf("\n|Nome: %s\t\t|",nodo ->data -> member);
     printf("\n|E-mail: %s\t|\n",nodo ->data -> gmail);
     printf("\n|E-mail: %d\t|\n",nodo ->data -> books);
+}
+
+//output users  with same name 
+void searchNameUser(userTree* rootB,char name[],bool* cond){
+    if(rootB == NULL || *cond == true){
+        return;
+    }
+    if(strcmp(rootB -> data ->member, name) == 0){
+        printTreeUser(rootB);
+        *cond = true;
+        return;
+    }
+    searchNameUser(rootB->left,name,cond);
+    if(*cond == true) {return;}
+    searchNameUser(rootB->right,name,cond);
+}
+
+//print of all the users
+void inOrderU(userTree *aux){
+    if(aux == NULL){
+        return;
+    }
+    inOrderU(aux -> left);
+    printTreeUser(aux);
+    inOrderU(aux -> right);
 }
 
 #endif
