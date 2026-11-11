@@ -38,7 +38,7 @@ typedef struct _l_E_B ListD_E_user;
 typedef struct _wactherUser{
     ListD_E_user* first;
     ListD_E_user* last;
-}WdogUser;
+}WDogUser;
 // lista encadeada que guarda os livros que o usuário retirou 
 struct _lE_User{
     Date* loanSt;
@@ -52,59 +52,45 @@ typedef struct _lE_User ListD_E_Book;
 typedef struct _wacther_Book{
     ListD_E_Book* first;
     ListD_E_Book* last;
-}WdogBook;
+}WDogBook;
 
 struct _arbor{
     int height;
     User *data;
     struct _arbor *left;
     struct _arbor *right;
-    //guardo os endereço dos livros emprestados
-    WdogUser *wardenB;
+    WDogBook *wardenB;
 };
 typedef struct _arbor userTree;
-
-//struct to book 
 
 struct _treeB{
     Book *data;
     int height;
     struct _treeB *right;
     struct _treeB *left;
-    //guarda o endereço dos usuarios com os livros 
-    WdogBook *wardenU;
+    WDogUser *wardenU;
 };
-typedef struct _treeB Node;
+typedef struct _treeB treeBook;
 //lista encadeada para registrar os livros no usuário
-WdogBook *creatWardenUser(){
-    WdogBook* warden = malloc(sizeof(WdogBook));
+WDogBook *creatWardenBook(){
+    WDogBook* warden = malloc(sizeof(WDogBook));
 
     warden -> first = NULL;
     warden -> last = NULL;
 
     return warden;
 }
-WdogBook *creatWardenBook(){
-    WdogBook* warden = malloc(sizeof(WdogBook));
+WDogUser *creatWardenUser(){
+    WDogUser* warden = malloc(sizeof(WDogUser));
     
     warden -> first = NULL;
     warden -> last = NULL;
 
     return warden;
 }
-ListD_E_Book *createLoanUser(int day1,int day2,int month1,int month2,int year1,int year2, Book* data){
+ListD_E_Book *createLoanBook(Date* newdateS,Date* newdateE, Book* data){
     ListD_E_Book* new = malloc(sizeof(ListD_E_Book));
-    Date* newdateS =  malloc(sizeof(Date));
-    Date* newdateE =  malloc(sizeof(Date));
-    
-    newdateS -> day = day1;
-    newdateE -> day = day2;
 
-    newdateS -> month = month1;
-    newdateE -> month = month2;
-
-    newdateS -> year = year1;
-    newdateE -> year = year2;
     
     new -> loanSt = newdateS;
     new -> loanEnd = newdateE;
@@ -117,20 +103,9 @@ ListD_E_Book *createLoanUser(int day1,int day2,int month1,int month2,int year1,i
     return new;
     
 }// registro o endereço do livro para o usuario
-ListD_E_user *createLoanBook(int day1,int day2,int month1,int month2,int year1,int year2, User* data){
+ListD_E_user *createLoanUser(Date* newdateS,Date* newdateE, User* data){
     ListD_E_user* new = malloc(sizeof(ListD_E_user));
-    Date* newdateS =  malloc(sizeof(Date));
-    Date* newdateE =  malloc(sizeof(Date));
-    
-    newdateS -> day = day1;
-    newdateE -> day = day2;
 
-    newdateS -> month = month1;
-    newdateE -> month = month2;
-
-    newdateS -> year = year1;
-    newdateE -> year = year2;
-    
     new -> loanSt = newdateS;
     new -> loanEnd = newdateE;
     
@@ -141,7 +116,7 @@ ListD_E_user *createLoanBook(int day1,int day2,int month1,int month2,int year1,i
     
     return new;
 }
-void addLoanUser(WdogUser* guardU,ListD_E_user* new){
+void addLoanUser(WDogUser* guardU,ListD_E_user* new){
     if(guardU -> first == NULL){
         guardU -> first = new;
         guardU -> last = new;
@@ -150,7 +125,6 @@ void addLoanUser(WdogUser* guardU,ListD_E_user* new){
     ListD_E_user* aux = guardU -> first;
     for(; aux != NULL; aux = aux -> next){
         int comp = strcmp( new -> data -> gmail, aux -> data -> gmail);
-        // break when o 
         if(comp < 0){
             break;
         }
@@ -162,21 +136,22 @@ void addLoanUser(WdogUser* guardU,ListD_E_user* new){
         guardU -> last = new;
         return;
     }
-    //2°case first of elements
 
+    //2°case first of elements
     if(aux -> prev == NULL){
         new -> next = aux;
         aux -> prev = new;
         guardU -> first = new;
         return;
     }
+
     //3°case quite of elements
     new -> next = aux;
     new -> prev = aux -> prev;
     aux -> prev -> next = new;
     aux -> prev = new;
 }
-void addLoanBook(WdogBook* guardU,ListD_E_Book* new){
+void addLoanBook(WDogBook* guardU,ListD_E_Book* new){
     if(guardU -> first == NULL){
         guardU -> first = new;
         guardU -> last = new;
@@ -211,7 +186,7 @@ void addLoanBook(WdogBook* guardU,ListD_E_Book* new){
     aux -> prev -> next = new;
     aux -> prev = new;
 }
-void returnLoanUser(WdogUser *copUs,User* tome){
+/* void returnLoanUser(WDogUser *copUs,User* tome){
     if(copUs -> first == NULL){
         return;
     }
@@ -247,7 +222,7 @@ void returnLoanUser(WdogUser *copUs,User* tome){
 
     }
 }
-void returnLoanBook(WdogBook *copUs,Book* tome){
+void returnLoanBook(WDogBook *copUs,Book* tome){
     if(copUs -> first  == NULL){
         return;
     }
@@ -309,7 +284,7 @@ void BSTuserDe(userTree *root, User *member, Book *item){
         return;
     }
  }
- void BSTBookDe(Node *root, Book *element, User *item){
+ void BSTBookDe(treeBook *root, Book *element, User *item){
      if(root == NULL){
         return;
     }
@@ -326,8 +301,8 @@ void BSTuserDe(userTree *root, User *member, Book *item){
         return;
     }
 }
-void removeAllUser(WdogBook *copUs,Book *tome, Node* rootBo){
-    ListD_E_book *aux = copUs ->first, *ant;
+void removeAllBook(WDogBook *copUs,Book *tome, treeBook* rootBo){
+    ListD_E_Book *aux = copUs ->first, *ant;
     while (aux != NULL){
         ant = aux;
         aux = aux -> next;
@@ -338,7 +313,7 @@ void removeAllUser(WdogBook *copUs,Book *tome, Node* rootBo){
         returnLoanBook(copUs,ant->data);
     }
 }
-void removeAllBook(WDogUser *copBo,User* people, userTree* rootUs){
+void removeAllUser(WDogUser *copBo,User* people, userTree* rootUs){
     ListD_E_user *aux = copBo ->first, *ant;
     while (aux != NULL){
         ant = aux;
@@ -346,5 +321,35 @@ void removeAllBook(WDogUser *copBo,User* people, userTree* rootUs){
         BSTuserDe(rootUs, people, ant->data);
         returnLoanUser(copBo, ant->data);
     }
+} */
+void printWDogBook(WDogBook* wardenB){
+    if(wardenB ->first == NULL){
+        printf("\n Nenhum livro retirado\n");
+
+        return;
+    }
+    ListD_E_Book* aux = wardenB ->first;
+    printf("\n+----------------------------------+\n");
+    for(;aux!=NULL;aux = aux -> next){
+        printf("\n|%ld\t\t|",aux ->data -> id);
+        printf("\n|%s\t|",aux ->data -> title);
+        printf("\n|%s\t\t|",aux ->data -> author);
+        printf("\n|%d\t\t|\n",aux ->data -> year);
+    }
+    printf("\n+-----------------------------------+\n");
+}
+
+void printWDogUser(WDogUser* wardenU){
+    if(wardenU ->first == NULL){
+        printf("\n Nenhum usuário retirou esse livro\n");
+        return;
+    }
+    ListD_E_user* aux = wardenU ->first;
+    printf("\n+----------------------------------+\n");
+    for(;aux!=NULL;aux = aux -> next){
+        printf("\n|%s\t|",aux ->data -> member);
+        printf("\n|%s\t\t|",aux ->data -> gmail);
+    }
+    printf("\n+-----------------------------------+\n");
 }
 #endif

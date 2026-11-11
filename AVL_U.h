@@ -1,11 +1,9 @@
+#ifndef AVLU_H
+#define AVLU_H
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <stdint.h>
-#include <math.h>
-#include <unistd.h>
-#include <time.h>
 #include "TAD.h"
 int heightUser(userTree* root){
     if(root == NULL){
@@ -13,17 +11,15 @@ int heightUser(userTree* root){
     }
     return root->height;
 }
-int max(int a,int b){
-    return a > b ? a : b;
-}
-//função que garante que a árvore sempre fique balaceada
+
 int getBalanceUser(userTree* root){
     if(root == NULL){
         return 0;
     }
     return heightUser(root -> left) - heightUser(root -> right);
 }
-userTree* rotateRight(userTree* root){
+
+userTree* rotateRightU(userTree* root){
     userTree* aux = root -> left;
     userTree* temp = aux -> right; 
 
@@ -34,7 +30,8 @@ userTree* rotateRight(userTree* root){
     aux -> height = 1 + max(heightUser(aux -> left), heightUser(aux -> right));
     return aux;
 }
-userTree* rotateLeft(userTree* root){
+
+userTree* rotateLeftU(userTree* root){
     userTree* aux = root -> right;
     userTree* temp = aux -> left; 
 
@@ -46,45 +43,81 @@ userTree* rotateLeft(userTree* root){
     
     return aux;
 }
+
 userTree* balanceUser(userTree *root){
     int fb = getBalanceUser(root);
     int baler = getBalanceUser(root -> left), balel = getBalanceUser(root -> right);
-    //left-left
+    //1°case
     if(fb > 1  &&  balel >= 0){
-        return rotateRight(root);
+        return rotateRightU(root);
     }
-    //right-right
+    //2°case
     if(fb < -1 && baler <= 0){
-        return rotateLeft(root);
+        return rotateLeftU(root);
     }
+    //3°case
     if(fb < -1 && baler > 0){
-        root -> right = rotateLeft(root ->right);
-        return rotateLeft(root);
+        root -> right = rotateLeftU(root ->right);
+        return rotateLeftU(root);
     }
+    //4°case
     if(fb > 1 &&  balel < 0){
-        root -> left = rotateRight(root ->left);
-        return rotateRight(root);   
+        root -> left = rotateRightU(root ->left);
+        return rotateRightU(root);   
     }
     return root;
 }
 
-userTree *creatUser(char member[],char gmail[]){
+userTree *creatUser(userTree* rootU){
     User* newdata = malloc( sizeof (User));
     userTree* new = malloc( sizeof (userTree));
-    strcpy(newdata -> member , member);
-    strcpy(newdata -> gmail , gmail);
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("\nNome do novo usuário:");
+    fgets(newdata -> member,MAXchar-1,stdin); 
+    newdata -> member[strcspn(newdata ->member,"\n")] = 0;
+
+    printf("\nRegistre o e-mail do usuário:");
+    fgets(newdata -> gmail,MAXchar-1,stdin); 
+    newdata -> gmail[strcspn(newdata ->gmail,"\n") ] = 0;
+
+    userTree* temp = NULL;
+    temp = searchCopyUser(rootU,newdata -> gmail);
+    while (temp !=NULL){
+        int option = 0;
+        memset(newdata -> gmail, 0, sizeof(MAXchar));
+        printf("\nE-mail já cadastrado! Deseja continuar ?");
+        printf("\n( 1 ) Sim");
+        printf("\n( 2 ) Não");
+        printf("\nQual opção: ");
+        scanf("%d",&option);
+        if(option == 1){
+            while ((c = getchar()) != '\n' && c != EOF);
+            printf("\nRegistre o e-mail do não cadastrado: ");
+            fgets(newdata -> gmail,MAXchar-1,stdin); 
+            newdata -> gmail[strcspn(newdata ->gmail,"\n") ]= 0;
+            temp = searchCopyUser(rootU,newdata -> gmail);
+        }else{
+            printf("\nOperação cancelada");
+            free(new);
+            free(newdata);
+            return NULL;
+        }
+    }
+
     new -> data =  newdata;
     new ->data-> books = 0;
+
     new-> height = 1;
-    // guardo o endereço dos livros 
-    WDogUser* wardenB = creatWardenBook();
-    new -> wardenB = wardenB;
+    // cop the address books retired
+    new -> wardenB = creatWardenBook();;
 
     new -> left = NULL;
     new -> right = NULL;
 
     return new;
 }
+
 userTree* addUser(userTree* root, userTree* new){
     if(root == NULL){
         return new;
@@ -92,19 +125,19 @@ userTree* addUser(userTree* root, userTree* new){
     int com = strcmp(root -> data ->gmail, new ->data ->gmail);
     if(com  < 0){
         root -> right = addUser(root -> right, new);
-    }else{
-        if(com > 0){
+    }else if(com > 0){
             root -> left = addUser(root -> left, new);
         }else{
             return root;
         }
-    }
     root -> height = 1 + max( heightUser( root -> left), heightUser( root -> right)); 
     
      
     return  balanceUser(root);
     
 }
+
+
 userTree* deleteUser(userTree* root, char gmail[]){
     if(root == NULL){
         return NULL;
@@ -144,18 +177,13 @@ userTree* deleteUser(userTree* root, char gmail[]){
     return balanceUser(root);
     
 }
-void inOrder(userTree *aux){
-    if(aux == NULL){
-        return;
-    }
-    inOrder(aux -> left);
-    printf("\t|Gmail: %s \t| Altura: %d |\t FB: %d|\n", aux->data->gmail, aux->height, getBalanceUser(aux));
-    inOrder(aux -> right);
- }
-int main(){
-    userTree* userRoot = NULL;
-    userRoot = addUser(userRoot, creatUser("vitor","vitorgfs10@gmail.com"));
-    inOrder(userRoot);
-    printf("\n");
-    return 0;
+
+void printTreeUser(userTree* nodo){
+    if(nodo == NULL) return;
+
+    printf("\n|Nome: %s\t\t|",nodo ->data -> member);
+    printf("\n|E-mail: %s\t|\n",nodo ->data -> gmail);
+    printf("\n|E-mail: %d\t|\n",nodo ->data -> books);
 }
+
+#endif
