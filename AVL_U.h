@@ -231,4 +231,84 @@ void inOrderU(userTree *aux){
     inOrderU(aux -> right);
 }
 
+
+userTree* registerUsersFile(userTree* root, char filename[]){
+    FILE* file = fopen(filename,"r");
+    if(file == NULL){
+        printf("\nErro ao abrir o arquivo de usuários!\n");
+        return root;
+    }
+
+    char line[MAXchar * 2 + 4];
+    int registered = 0, duplicated = 0, invalid = 0;
+
+    while(fgets(line,sizeof(line),file) != NULL){
+        line[strcspn(line,"\r\n")] = '\0';
+
+        char* member = line;
+        char* gmail = strchr(member,';');
+
+        if(gmail == NULL){
+            invalid++;
+            continue;
+        }
+
+        *gmail = '\0';
+        gmail++;
+
+        if(strlen(member) == 0 || strlen(gmail) == 0 || strlen(member) >= MAXchar || strlen(gmail) >= MAXchar){
+            invalid++;
+            continue;
+        }
+
+        if(strchr(gmail,';') != NULL){
+            invalid++;
+            continue;
+        }
+
+        if(searchCopyUser(root,gmail) != NULL){
+            duplicated++;
+            continue;
+        }
+
+        User* newdata = malloc(sizeof(User));
+        userTree* new = malloc(sizeof(userTree));
+
+        if(newdata == NULL || new == NULL){
+            free(newdata);
+            free(new);
+            printf("\nErro ao alocar memória!\n");
+            break;
+        }
+
+        strcpy(newdata->member,member);
+        strcpy(newdata->gmail,gmail);
+        newdata->books = 0;
+
+        new->data = newdata;
+        new->height = 1;
+        new->left = NULL;
+        new->right = NULL;
+        new->wardenB = creatWardenBook();
+
+        if(new->wardenB == NULL){
+            free(newdata);
+            free(new);
+            printf("\nErro ao alocar memória!\n");
+            break;
+        }
+
+        root = addUser(root,new);
+        registered++;
+    }
+
+    fclose(file);
+
+    printf("\nUsuários cadastrados: %d",registered);
+    printf("\nE-mails já cadastrados: %d",duplicated);
+    printf("\nLinhas inválidas: %d\n",invalid);
+
+    return root;
+}
+
 #endif

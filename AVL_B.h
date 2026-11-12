@@ -4,6 +4,7 @@
 #include "listEnB.h"
 #include "listEnU.h"
 #include <inttypes.h>
+#include <limits.h> 
 int heightBook(treeBook* root){
     if(root == NULL){
         return 0;
@@ -128,7 +129,7 @@ treeBook *creatBook(uint64_t id){
    if(root == NULL){
        return new;
    }
-   int id1 = root -> data -> id, id2 = new -> data -> id; 
+   uint64_t id1 = root -> data -> id, id2 = new -> data -> id; 
    if(id1  < id2){
        root -> right = addBook(root -> right, new);
    }else if(id1 > id2){
@@ -230,4 +231,105 @@ void inOrderB(treeBook *aux){
     printTreeBook(aux);
     inOrderB(aux -> right);
 }
+
+//cadastro de livro por um arquivo
+
+treeBook *registerBooksFile(treeBook *root, char filename[], uint64_t *ref, uint64_t *idP, uint64_t *ipN, uint64_t *control){
+    FILE *file = fopen(filename,"r");
+    if(file == NULL){
+        printf("\nNão foi possível abrir o arquivo!");
+        return root;
+    }
+
+    char line[MAXchar*2+64];
+    int registered = 0, updated = 0, invalid = 0;
+
+    while(fgets(line,sizeof(line),file) != NULL){
+        line[strcspn(line,"\r\n")] = '\0';
+
+        char *title = line;
+        char *author = strchr(title,';');
+        if(author == NULL){
+            invalid++;
+            continue;
+        }
+        *author = '\0';
+        author++;
+
+        char *yearField = strchr(author,';');
+        if(yearField == NULL){
+            invalid++;
+            continue;
+        }
+        *yearField = '\0';
+        yearField++;
+
+        char *amountField = strchr(yearField,';');
+        if(amountField == NULL || strchr(amountField+1,';') != NULL){
+            invalid++;
+            continue;
+        }
+        *amountField = '\0';
+        amountField++;
+
+        char *endYear, *endAmount;
+        long year = strtol(yearField,&endYear,10);
+        long amount = strtol(amountField,&endAmount,10);
+
+        if(title[0] == '\0' || author[0] == '\0' || strlen(title) >= MAXchar || strlen(author) >= MAXchar || endYear == yearField || endAmount == amountField || *endYear != '\0' || *endAmount != '\0' || year <= 0 || year > INT_MAX || amount <= 0 || amount > INT_MAX){
+            invalid++;
+            continue;
+        }
+
+        treeBook *temp = searchCopyBook(root,title);
+
+        if(temp != NULL){
+            if(temp->data->amount > INT_MAX - amount){
+                invalid++;
+                continue;
+            }
+            temp->data->amount += amount;
+            updated++;
+            continue;
+        }
+
+        Book *newdata = malloc(sizeof(Book));
+        treeBook *new = malloc(sizeof(treeBook));
+        WDogUser *warden = creatWardenUser();
+
+        if(newdata == NULL || new == NULL || warden == NULL){
+            free(newdata);
+            free(new);
+            free(warden);
+            invalid++;
+            continue;
+        }
+
+        strcpy(newdata->title,title);
+        strcpy(newdata->author,author);
+        newdata->year = year;
+        newdata->amount = amount;
+        newdata->amountLent = 0;
+        newdata->id = newID(ref,idP,ipN,control);
+
+        new->data = newdata;
+        new->height = 1;
+        new->left = NULL;
+        new->right = NULL;
+        new->wardenU = warden;
+
+        root = addBook(root,new);
+        registered++;
+    }
+
+    fclose(file);
+
+    printf("\n\t\tCadastro por arquivo concluído!");
+    printf("\n\t\tLivros cadastrados: %d",registered);
+    printf("\n\t\tQuantidade atualizada: %d",updated);
+    printf("\n\t\tLinhas inválidas: %d\n",invalid);
+    sleep(1);
+    return root;
+}
+
 #endif

@@ -23,6 +23,8 @@ int main(){
 /*     char name[MAXchar], gmail[MAXchar], title[MAXchar], author[MAXchar];
     int year,amount; */
     bool ever = true;
+    rootBook = registerBooksFile(rootBook,"test.txt",&ref,&idP,&ipN,&control);
+    rootUser = registerUsersFile(rootUser,"users.txt");
     for(;ever;){
         printf("\n\t\t+-----------------------------------------------+\n");
         printf("\t\t|\t\t( 1 ) . Cadastro \U0001F4DD\t\t|\n\t\t|\t\t\t\t\t\t|\n");

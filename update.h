@@ -92,7 +92,7 @@ void update(userTree* rootU, treeBook* rootB){
             printf("\n\t\t Livro não encontrado!");
             return;
         }
-        printf("\n\t\tLivro encontrado!");
+        printf("\n\t\t Livro encontrado!");
 
         time_t agora = time(NULL);
         struct tm *data = localtime(&agora);
@@ -100,8 +100,9 @@ void update(userTree* rootU, treeBook* rootB){
         Date today = { data->tm_mday, data->tm_mon + 1, data->tm_year + 1900};
 
         if(isLate(livro->loanEnd, &today)){
-            printf("\n\t\tLivro atrasado!");
-            printf("\n\t\tRenovação indisponível. É necessário devolver o item.\n");
+            printf("\n\t\t Livro atrasado!");
+            printf("\n\t\t A devolução após o prazo estará sujeita à multa!");
+            printf("\n\t\t Renovação indisponível. É necessário devolver o item.\n");
             return;
         }else{
             livro->loanEnd->day = today.day;
@@ -120,8 +121,8 @@ void update(userTree* rootU, treeBook* rootB){
 
             free(newEnd);
 
-            printf("\n\t\tLivro renovado!");
-            printf("\n\t\tData devolução: ");
+            printf("\n\t\t Livro renovado!");
+            printf("\n\t\t Data devolução: ");
             printDate(livro->loanEnd);
             printf("\n");
         }
