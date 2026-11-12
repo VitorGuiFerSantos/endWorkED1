@@ -9,7 +9,7 @@
 #include <inttypes.h>
 void update(userTree* rootU, treeBook* rootB){
     int code = 0;
-    printf("\n\n\t\t+---------------Atualização------------------+\n\t\t|\t\t\t\t\t\t|\n");
+    printf("\n\n\t\t+---------------ATUALIZAÇÃO------------------+\n\t\t|\t\t\t\t\t\t|\n");
     printf("\n\t\t ( 1 ) Livro  ");
     printf("\n\t\t ( 2 ) Usuário  ");
     printf("\n\t\t ( 3 ) Renovar empréstimo");
