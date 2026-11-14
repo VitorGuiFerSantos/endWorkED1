@@ -100,17 +100,33 @@ treeBook *creatBook(uint64_t id){
     while ((c = getchar()) != '\n' && c != EOF);
     printf("\n Nome do livro: ");
     fgets(newdata -> title,MAXchar-1,stdin); 
-    newdata -> title[strcspn(newdata ->title,"\n") ]= 0;
+    newdata -> title[strcspn(newdata -> title,"\n") ]= 0;
     
     printf("\n Autor do livro: ");
     fgets(newdata -> author,MAXchar-1,stdin); 
-    newdata -> author[strcspn(newdata ->author,"\n") ]= 0;
-    printf("\n Ano de publicação do livro: ");
-    scanf("%d",&newdata -> year); 
-    
-    printf("\n Quantidade de copias do livro: ");
-    scanf("%d",&newdata -> amount);
+    newdata -> author[strcspn(newdata -> author,"\n") ]= 0;
+    while(1){
+        printf("\n\t\t Informe o ano de livros: ");
 
+        if(scanf("%d", &newdata -> year) == 1){
+            break;
+        }
+
+        printf("\n\t\t Entrada inválida! Digite um número.");
+
+        while((c = getchar()) != '\n' && c != EOF);
+    }
+    while(1){
+        printf("\n\t\t Informe a quantidade de livros: ");
+
+        if(scanf("%d", &newdata -> amount) == 1){
+            break;
+        }
+
+        printf("\n\t\t Entrada inválida! Digite um número.");
+
+        while((c = getchar()) != '\n' && c != EOF);
+    }
     newdata -> id = id;
     newdata -> amountLent = 0;
 
@@ -187,12 +203,12 @@ treeBook *deleteBook(treeBook *root, int id){
 void printTreeBook(treeBook* nodo){
     if(nodo == NULL) return;
 
-    printf("\n\t\t|ID: %" PRIu64 "\t\t\t\t|",nodo ->data -> id);
-    printf("\n\t\t|Título: %s\t\t\t\t|",nodo ->data -> title);
-    printf("\n\t\t|Autor: %s\t\t\t\t|",nodo ->data -> author);
-    printf("\n\t\t|Ano de publicação: %d\t\t|",nodo ->data -> year);
-    printf("\n\t\t|Cópias: %d\t\t\t\t|",nodo ->data -> amount);
-    printf("\n\t\t|Copias retiradas: %d\t\t\t|\n",nodo ->data -> amountLent);
+    printf(" \n\t\t | ID: %" PRIu64 "\t\t\t\t | ",nodo ->data -> id);
+    printf(" \n\t\t | Título: %s \t\t\t\t | ",nodo ->data -> title);
+    printf(" \n\t\t | Autor: %s \t\t\t\t | ",nodo ->data -> author);
+    printf(" \n\t\t | Ano de publicação: %d \t\t | ",nodo ->data -> year);
+    printf(" \n\t\t | Cópias: %d \t\t\t\t | ",nodo ->data -> amount);
+    printf(" \n\t\t | Copias retiradas: %d \t\t\t | \n",nodo ->data -> amountLent);
 }
 //search id and return one copy
 treeBook* searchIdBook(treeBook* rootB, uint64_t id){
@@ -237,7 +253,7 @@ void inOrderB(treeBook *aux){
 treeBook *registerBooksFile(treeBook *root, char filename[], uint64_t *ref, uint64_t *idP, uint64_t *ipN, uint64_t *control){
     FILE *file = fopen(filename,"r");
     if(file == NULL){
-        printf("\nNão foi possível abrir o arquivo!");
+        printf("\n Não foi possível abrir o arquivo!");
         return root;
     }
 

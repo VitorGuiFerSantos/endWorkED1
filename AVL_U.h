@@ -106,19 +106,23 @@ userTree *creatUser(userTree* rootU){
     while (temp !=NULL){
         int option = 0;
         memset(newdata -> gmail, 0, sizeof(MAXchar));
-        printf("\nE-mail já cadastrado! Deseja continuar ?");
-        printf("\n( 1 ) Sim");
-        printf("\n( 2 ) Não");
-        printf("\nQual opção: ");
-        scanf("%d",&option);
+        printf("\n E-mail já cadastrado! Deseja continuar? ");
+        printf("\n ( 1 ) Sim");
+        printf("\n ( 2 ) Não");
+        printf("\n Qual opção: ");
+        if(scanf("%d", &option) != 1){
+            printf("\n\t\t Entrada inválida! Digite um número.");
+            while(getchar() != '\n');
+            continue;
+        }
         if(option == 1){
             while ((c = getchar()) != '\n' && c != EOF);
-            printf("\nRegistre o e-mail do não cadastrado: ");
+            printf("\n Registre o e-mail do não cadastrado: ");
             fgets(newdata -> gmail,MAXchar-1,stdin); 
             newdata -> gmail[strcspn(newdata ->gmail,"\n") ]= 0;
             temp = searchCopyUser(rootU,newdata -> gmail);
         }else{
-            printf("\nOperação cancelada");
+            printf("\n Operação cancelada");
             free(new);
             free(newdata);
             return NULL;
@@ -201,9 +205,9 @@ userTree* deleteUser(userTree* root, char gmail[]){
 void printTreeUser(userTree* nodo){
     if(nodo == NULL) return;
 
-    printf("\n|Nome: %s\t\t|",nodo ->data -> member);
-    printf("\n|E-mail: %s\t|\n",nodo ->data -> gmail);
-    printf("\n|E-mail: %d\t|\n",nodo ->data -> books);
+    printf("\n | Nome: %s\t\t | ",nodo ->data -> member);
+    printf("\n | E-mail: %s\t | \n",nodo ->data -> gmail);
+    printf("\n | E-mail: %d\t | \n",nodo ->data -> books);
 }
 
 //output users  with same name 
@@ -235,7 +239,7 @@ void inOrderU(userTree *aux){
 userTree* registerUsersFile(userTree* root, char filename[]){
     FILE* file = fopen(filename,"r");
     if(file == NULL){
-        printf("\nErro ao abrir o arquivo de usuários!\n");
+        printf("\n Erro ao abrir o arquivo de usuários!\n");
         return root;
     }
 
@@ -277,7 +281,7 @@ userTree* registerUsersFile(userTree* root, char filename[]){
         if(newdata == NULL || new == NULL){
             free(newdata);
             free(new);
-            printf("\nErro ao alocar memória!\n");
+            printf("\n Erro ao alocar memória!\n");
             break;
         }
 
@@ -294,7 +298,7 @@ userTree* registerUsersFile(userTree* root, char filename[]){
         if(new->wardenB == NULL){
             free(newdata);
             free(new);
-            printf("\nErro ao alocar memória!\n");
+            printf("\n Erro ao alocar memória!\n");
             break;
         }
 
@@ -304,11 +308,12 @@ userTree* registerUsersFile(userTree* root, char filename[]){
 
     fclose(file);
 
-    printf("\nUsuários cadastrados: %d",registered);
-    printf("\nE-mails já cadastrados: %d",duplicated);
-    printf("\nLinhas inválidas: %d\n",invalid);
+    printf("\n Usuários cadastrados: %d",registered);
+    printf("\n E-mails já cadastrados: %d",duplicated);
+    printf("\n Linhas inválidas: %d\n",invalid);
 
     return root;
 }
+
 
 #endif

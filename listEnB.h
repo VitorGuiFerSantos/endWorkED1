@@ -116,23 +116,23 @@ void returnLoanBook(WDogBook *copBK,ListD_E_Book* tome){
 }
 void printWDogBook(WDogBook* wardenB){
     if(wardenB ->first == NULL){
-        printf("\n Nenhum livro retirado\n");
+        printf("\n Nenhum livro retirado \n");
 
         return;
     }
     ListD_E_Book* aux = wardenB ->first;
-    printf("\n+----------------------------------+\n");
+    printf("\n +----------------------------------+ \n");
     for(;aux!=NULL;aux = aux -> next){
-        printf("\n\t\t|%"PRIu64"\t\t|",aux ->data -> id);
-        printf("\n\t\t|%s\t|",aux ->data -> title);
-        printf("\n\t\t|%s\t\t|",aux ->data -> author);
-        printf("\n\t\t|%d\t\t|\n",aux ->data -> year);
-        printf("\n\t\t| Data retirada/renovação:");
+        printf(" \n\t\t | ID: %"PRIu64" \t\t |",aux ->data -> id);
+        printf(" \n\t\t | Título: %s \t |",aux ->data -> title);
+        printf(" \n\t\t | Autor: %s \t\t |",aux ->data -> author);
+        printf(" \n\t\t | Ano de publicação: %d\t\t |",aux ->data -> year);
+        printf(" \n\t\t |  Data retirada: ");
         printDate(aux ->loanSt);
         printf("\t\t|\n\t\t| Data devolução:");
         printDate(aux ->loanEnd);
         printf("\t\t|\n");
     }
-    printf("\n+-----------------------------------+\n");
+    printf("\n +-----------------------------------+ \n");
 }
 #endif

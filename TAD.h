@@ -56,7 +56,7 @@ struct _l_E_B{
     struct _l_E_B *next;
     struct _lE_User *correspondingLoan;
 
-    WDogUser *otherWarden;
+    WDogBook *otherWarden;
 };
 // lista encadeada que guarda os livros que o usuário retirou 
 
@@ -70,7 +70,7 @@ struct _lE_User{
 
     struct _l_E_B *correspondingLoan;
 
-    WDogBook *otherWarden;
+    WDogUser *otherWarden;
 };
 
 struct _arbor{
@@ -160,7 +160,7 @@ bool isLate(Date *end, Date *today){
     return todayDays > endDays;
 }
 void printDate(Date* day){
-    printf("%02d/%02d/%04d",day -> day, day -> month, day ->year);
+    printf("%02d/%02d/%04d ",day -> day, day -> month, day ->year);
 
 }
 /* 

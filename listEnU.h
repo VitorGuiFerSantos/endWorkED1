@@ -76,7 +76,7 @@ ListD_E_user *returnUser(WDogUser* wardenU, char gmail[]){
         return NULL;
     }
     for(ListD_E_user* aux = wardenU -> first; aux!= NULL; aux = aux -> next){
-        if(strcmp( aux -> data -> gmail,gmail)){
+        if(strcmp( aux -> data -> gmail,gmail)==0){
             return aux;
         }
     }
@@ -116,15 +116,15 @@ void returnLoanUser(WDogUser *copUs,ListD_E_user* tome){
 
 void printWDogUser(WDogUser* wardenU){
     if(wardenU ->first == NULL){
-        printf("\n Nenhum usuário retirou esse livro\n");
+        printf("\n Nenhum usuário retirou esse livro \n");
         return;
     }
     ListD_E_user* aux = wardenU ->first;
-    printf("\n+----------------------------------+\n");
+    printf("\n +----------------------------------+ \n");
     for(;aux!=NULL;aux = aux -> next){
-        printf("\n|%s\t|",aux ->data -> member);
-        printf("\n|%s\t\t|",aux ->data -> gmail);
+        printf("\n | Nome: %s \t\t |",aux ->data -> member);
+        printf("\n | E-mail: %s \t |",aux ->data -> gmail);
     }
-    printf("\n+-----------------------------------+\n");
+    printf("\n +-----------------------------------+ \n");
 }
 #endif
