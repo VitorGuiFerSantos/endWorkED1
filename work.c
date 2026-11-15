@@ -10,7 +10,6 @@
 #include "TAD.h"
 #include "AVL_B.h"
 #include "AVL_U.h"
-#include "loan.h"
 #define MAXchar 300
 int main(){
     //control ID
@@ -423,16 +422,125 @@ int main(){
             }
         }
         if(opc == 4){
-            int escolha = 0;
-            printf("\n\n\t\t+---------------DELEÇÃO------------------+\n\t\t|\t\t\t\t\t\t|\n");
-            printf("\n\t\t ( 1 ) Livro  ");
-            printf("\n\t\t ( 2 ) Usuário  ");
-            printf("\n\t\t ( 0 ) voltar  ");
-            printf("\n\t\t Qual opção: ");
-            if(scanf("%d", &escolha) != 1){
-                printf("\n\t\t Entrada inválida! Digite um número.");
-                while(getchar() != '\n');
-                continue;
+            while (1){
+                int escolha = 0;
+                printf("\n\n\t\t+---------------DELEÇÃO------------------+\n\t\t|\t\t\t\t\t\t|\n");
+                printf("\n\t\t ( 1 ) Livro  ");
+                printf("\n\t\t ( 2 ) Usuário  ");
+                printf("\n\t\t ( 0 ) voltar  ");
+                printf("\n\t\t Qual opção: ");
+                if(scanf("%d", &escolha) != 1){
+                    printf("\n\t\t Entrada inválida! Digite um número.");
+                    while(getchar() != '\n');
+                    continue;
+                }
+                if(escolha == 0){
+                    break;
+                }
+                if(escolha == 1){
+                    uint64_t id = 0;
+                    treeBook* auxBk = NULL;
+
+                    printf("\n\n\t\t+---------------DELEÇÃO------------------+\n");
+                    printf("\n\t\t Insira o código do livro para deletar: ");
+
+                    if(scanf("%" SCNu64, &id) != 1){
+                        printf("\n\t\t Entrada inválida! Digite um número.");
+                        int c;
+                        while((c = getchar()) != '\n' && c != EOF);
+                        continue;
+                    }
+
+                    auxBk = searchIdBook(rootBook,id);
+
+                    if(auxBk == NULL){
+                        printf("\n\t\t Livro não encontrado!");
+                        continue;
+                    }
+
+                    printf("\n\t\t Livro encontrado!");
+                    printTreeBook(auxBk);
+
+                    WDogUser* copUS = auxBk->wardenU;
+
+                    while(copUS->first != NULL){
+                        ListD_E_user* noU = copUS->first;
+                        ListD_E_Book* noB = noU->correspondingLoan;
+
+                        Date* St = noU->loanSt;
+                        Date* En = noU->loanEnd;
+
+                        noU->data->books--;
+
+                        returnLoanBook(noU->otherWarden,noB);
+                        returnLoanUser(copUS,noU);
+
+                        free(St);
+                        free(En);
+                        free(noB);
+                        free(noU);
+                    }
+
+                    uint64_t idDelete = auxBk->data->id;
+
+                    free(copUS);
+                    auxBk->wardenU = NULL;
+
+                    rootBook = deleteBook(rootBook,idDelete);
+
+                    printf("\n\t\t Livro deletado do acervo!");
+                    continue;
+                }
+                if(escolha == 2){
+                    char gmail[MAXchar];
+                    userTree* auxUs = NULL;
+
+                    printf("\n\n\t\t+---------------DELEÇÃO DE USUÁRIO------------------+\n");
+                    printf("\n\t\t Insira o e-mail do usuário para deletar: ");
+
+                    if(scanf("%299s",gmail) != 1){
+                        printf("\n\t\t Entrada inválida!");
+                        int c;
+                        while((c = getchar()) != '\n' && c != EOF);
+                        continue;
+                    }
+
+                    auxUs = searchCopyUser(rootUser,gmail);
+
+                    if(auxUs == NULL){
+                        printf("\n\t\t Usuário não encontrado!");
+                        continue;
+                    }
+
+                    printf("\n\t\t Usuário encontrado!");
+                    printTreeUser(auxUs);
+
+                    WDogBook* copUs = auxUs->wardenB;
+
+                    while(copUs->first != NULL){
+                        ListD_E_Book* noB = copUs->first;
+                        ListD_E_user* noU = noB->correspondingLoan;
+
+                        Date* St = noB->loanSt;
+                        Date* En = noB->loanEnd;
+
+                        noB->data->amountLent--;
+
+                        returnLoanUser(noB->otherWarden,noU);
+                        returnLoanBook(copUs,noB);
+
+                        free(St);
+                        free(En);
+                        free(noU);
+                        free(noB);
+                    }
+
+                    rootUser = deleteUser(rootUser,gmail);
+
+                    printf("\n\t\t Usuário deletado com sucesso!");
+                    continue;
+
+                }
             }
         }
         if(opc == 5){

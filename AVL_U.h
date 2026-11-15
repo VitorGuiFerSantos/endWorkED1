@@ -177,23 +177,32 @@ userTree* deleteUser(userTree* root, char gmail[]){
     if(com == 0){
         if(root -> left == NULL){
             userTree *aux = root -> right;
+            free(root->wardenB);
             free(root->data);
             free(root);
             return aux;
         }
         if(root -> right == NULL){
             userTree *aux = root -> left;
+            free(root->wardenB);
             free(root->data);
             free(root);
             return aux;
         }
         userTree *aux = root -> right;
+        
         for(; aux ->left!= NULL; aux = aux ->left){}
-        User* data;
-        data = root ->data;
-        root ->data = aux -> data;
-        aux ->data = data;
-        root ->right = deleteUser(root -> right, aux -> data ->gmail);
+
+        User* data = root -> data;
+        WDogBook* warden = root -> wardenB;
+
+        root -> data = aux -> data;
+        root -> wardenB = aux -> wardenB;
+
+        aux -> data = data;
+        aux -> wardenB = warden;
+
+        root ->right = deleteUser(root -> right, aux -> data -> gmail);
 
     }
     root -> height = 1 + max( heightUser( root -> left), heightUser( root -> right)); 

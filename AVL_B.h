@@ -144,15 +144,15 @@ treeBook *creatBook(uint64_t id){
  treeBook *addBook(treeBook *root, treeBook *new){
    if(root == NULL){
        return new;
-   }
+    }
    uint64_t id1 = root -> data -> id, id2 = new -> data -> id; 
    if(id1  < id2){
        root -> right = addBook(root -> right, new);
-   }else if(id1 > id2){
-           root -> left = addBook(root -> left, new);
-       }else{
-           return root;
-       }
+    }else if(id1 > id2){
+        root -> left = addBook(root -> left, new);
+    }else{
+        return root;
+    }
 
    root -> height = 1 + max( heightBook( root -> left), heightBook( root -> right)); 
    
@@ -163,34 +163,43 @@ treeBook *creatBook(uint64_t id){
 treeBook *deleteBook(treeBook *root, int id){
    if(root == NULL){
        return root;
-   }
+    }
    int id1 = root -> data -> id; 
    if(id1  < id){
        root -> right = deleteBook(root -> right, id);
    }else{
        if(id1  > id){
            root -> left = deleteBook(root -> left, id);
-       }
+        }
    }
    if(id1 == id){
        if(root -> left == NULL){
-           treeBook *aux = root -> right;
-           free(root->data);
-           free(root);
-           return aux;
-       }
+            treeBook *aux = root -> right;
+            free(root->wardenU);
+            free(root->data);
+            free(root);
+            return aux;
+        }
        if(root -> right == NULL){
-           treeBook *aux = root -> left;
-           free(root->data);
-           free(root);
-           return aux;
-       }
-       treeBook *aux = root -> right;
-       for(; aux ->left!= NULL; aux = aux ->left){}
-       Book* data;
-       data = root ->data;
-       root ->data = aux -> data;
-       aux ->data = data;
+            treeBook *aux = root -> left;
+            free(root->wardenU);
+            free(root->data);
+            free(root);
+            return aux;
+        }
+        treeBook *aux = root -> right;
+        
+        for(; aux ->left!= NULL; aux = aux ->left){}
+
+        Book* data = root->data;
+        WDogUser* warden = root->wardenU;
+
+        root->data = aux->data;
+        root->wardenU = aux->wardenU;
+
+        aux->data = data;
+        aux->wardenU = warden;
+
        root ->right= deleteBook(root -> right, aux ->data -> id);
    }
    
