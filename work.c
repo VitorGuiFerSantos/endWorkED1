@@ -10,6 +10,8 @@
 #include "TAD.h"
 #include "AVL_B.h"
 #include "AVL_U.h"
+#include "listEnB.h"
+#include "listEnU.h"
 #define MAXchar 300
 int main(){
     //control ID
@@ -24,14 +26,14 @@ int main(){
     int year,amount; */
     bool ever = true;
     rootBook = registerBooksFile(rootBook,"test.txt",&ref,&idP,&ipN,&control);
-    rootUser = registerUsersFile(rootUser,"users.txt");
+    rootUser = registerUsersFile(rootUser,"usuarios.txt");
     for(;ever;){
 
         printf("\n\t\t +---------------------MENU----------------------+ \n");
         printf("\t\t | \t\t ( 1 ) . Cadastro \U0001F4DD \t\t | \n\t\t | \t\t\t\t\t\t | \n");
         printf("\t\t | \t\t ( 2 ) . Consulta \U0001F50D \t\t | \n\t\t | \t\t\t\t\t\t | \n");
-        printf("\t\t | \t\t ( 3 ) . Atualização \U0001F504 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
-        printf("\t\t | \t\t ( 4 ) . Exclusão \U0001F5D1 \t\t | \n\t\t|\t\t\t\t\t\t | \n");
+        printf("\t\t | \t\t ( 3 ) . Atualização \U0001F504 \t | \n\t\t | \t\t\t\t\t\t | \n");
+        printf("\t\t | \t\t ( 4 ) . Exclusão \U0001F5D1 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
         printf("\t\t | \t\t ( 5 ) . Empréstimo \U0001F4D6 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
         printf("\t\t | \t\t ( 6 ) . Devolução \U0001F4DA \t\t | \n\t\t | \t\t\t\t\t\t | \n");
         printf("\t\t | \t\t ( 0 ) . Voltar \u21A9 \t\t |");
@@ -49,12 +51,12 @@ int main(){
         }
         if(opc == 1){
             printf("\n\n\t\t+-------------OPÇÕES-DE-CADASTRO----------------+\n\t\t|\t\t\t\t\t\t|\n");
-            printf("\t\t|\t\t( 1 ) . Livros \U0001F4DA\t\t|\n\t\t|\t\t\t\t\t\t|\n");
-            printf("\t\t|\t\t( 2 ) . Usuários \xF0\x9F\x91\xA4 \t\t|\n\t\t|\t\t\t\t\t\t|\n");
-            printf("\t\t|\t\t( 0 ) . Voltar \u21A9\t\t|");
+            printf("\t\t | \t\t ( 1 ) . Livros \U0001F4DA \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+            printf("\t\t | \t\t ( 2 ) . Usuários \xF0\x9F\x91\xA4 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+            printf("\t\t | \t\t ( 0 ) . Voltar \u21A9 \t\t|");
             printf("\n\t\t+-----------------------------------------------+\n\n");
 
-            printf("\nEscolha uma opção:  ");
+            printf("\n Escolha uma opção:  ");
             if(scanf("%d", &op_cad) != 1){
                 printf("\n\t\t Entrada inválida! Digite um número.");
                 while(getchar() != '\n');
@@ -68,15 +70,15 @@ int main(){
 
                 if(temp == NULL){
                     rootBook = addBook(rootBook,newBook);
-                    printf("\n\t\tLivro cadastrado com êxito!\n");
+                    printf("\n\t\t Livro cadastrado com êxito!\n");
                     continue;
                 }else{
-                    printf("\n\tEsse livro já existe no acervo!\n\n\tDeseja adicionar uma cópia deste livro?\n");
-                    printf("\n\t\t| 1 | . Sim\n");
-                    printf("\n\t\t| 2 | . Não\n");
-                    printf("\n\t\t| 0 | . Menu principal\n");
+                    printf("\n\t Esse livro já existe no acervo!\n\n\tDeseja adicionar uma cópia deste livro? \n");
+                    printf("\t\t | \t\t ( 1 ) . Sim \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                    printf("\t\t | \t\t ( 2 ) . Não \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                    printf("\t\t | \t\t ( 0 ) . Menu principal \t\t | \n\t\t | \t\t\t\t\t\t | \n");
 
-                    printf("\n\t\t Qual opção deseja?  ");
+                    printf("\n\t\t Qual opção deseja? ");
                     if(scanf("%d", &escolha) != 1){
                         printf("\n\t\t Entrada inválida! Digite um número.");
                         while(getchar() != '\n');
@@ -84,11 +86,11 @@ int main(){
                     }
                     if( escolha == 1){
                         temp ->data ->amount++;
-                        printf("\nLivro adicionado com êxito!\n");
+                        printf("\n Livro adicionado com êxito! \n");
                     }else if(escolha == 2){
                         sprintf(newBook -> data ->title + strlen(newBook -> data ->title), "-%ld", newBook ->data ->id );
                         rootBook = addBook(rootBook,newBook);
-                        printf("\nLivro cadastrado com êxito!\n");
+                        printf("\n Livro cadastrado com êxito! \n");
                         continue;
                     }
                     free(newBook ->data);
@@ -113,11 +115,11 @@ int main(){
                 treeBook* tempoB = NULL;
                 userTree* tempoU = NULL;
 
-                printf("\n\n\t\t+-------------OPÇÕES-DE-CONSULTA----------------+\n\t\t|\t\t\t\t\t\t|\n");
-                printf("\t\t|\t\t( 1 ) . Livros \U0001F4DA\t\t|\n\t\t|\t\t\t\t\t\t|\n");
-                printf("\t\t|\t\t( 2 ) . Usuários \xF0\x9F\x91\xA4 \t\t|\n\t\t|\t\t\t\t\t\t|\n");
-                printf("\t\t|\t\t( 0 ) . Voltar \u21A9\t\t|");
-                printf("\n\t\t+-----------------------------------------------+\n\n");
+                printf("\n\n\t\t +-------------OPÇÕES-DE-CONSULTA----------------+ \n\t\t | \t\t\t\t\t\t | \n");
+                printf("\t\t | \t\t ( 1 ) . Livros \U0001F4DA \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                printf("\t\t | \t\t ( 2 ) . Usuários \xF0\x9F\x91\xA4 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                printf("\t\t | \t\t ( 0 ) . Voltar \u21A9 \t\t |");
+                printf("\n\t\t +-----------------------------------------------+ \n\n");
 
                 printf("\n Escolha uma opção:  ");
                 if(scanf("%d", &escolha1) != 1){
@@ -130,13 +132,13 @@ int main(){
                 }
                 if(escolha1 == 1){
                     while(1){
-                        printf("\n\n\t\t+---------OPÇÕES-DE-CONSULTA-PARA-LIVRO---------+\n\t\t|\t\t\t\t\t\t|\n");
-                        printf("\t\t|\t\t( 1 ) . Código \U0001F522\t\t|\n\t\t|\t\t\t\t\t\t|\n");
-                        printf("\t\t|\t\t( 2 ) . Autor \xF0\x9F\x91\xA4 \t\t|\n\t\t|\t\t\t\t\t\t|\n");
-                        printf("\t\t|\t\t( 3 ) . Empréstimos \U0001F4D6 \t\t|\n\t\t|\t\t\t\t\t\t|\n");
-                        printf("\t\t|\t\t( 4 ) . Todo o registro \U0001F4DA\t|\n\t\t|\t\t\t\t\t\t|\n");
-                        printf("\t\t|\t\t( 0 ) . Voltar \u21A9\t\t|");
-                        printf("\n\t\t+-----------------------------------------------+\n\n");
+                        printf("\n\n\t\t +---------OPÇÕES-DE-CONSULTA-PARA-LIVRO---------+ \n \t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 1 ) . Código \U0001F522\t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 2 ) . Autor \xF0\x9F\x91\xA4 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 3 ) . Empréstimos \U0001F4D6 \t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 4 ) . Todo o registro \U0001F4DA\t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 0 ) . Voltar \u21A9\t\t |");
+                        printf("\n\t\t +-----------------------------------------------+ \n\n");
 
                         printf("\nEscolha uma opção:  ");
                         if(scanf("%d", &escolha2) != 1){
@@ -425,10 +427,10 @@ int main(){
             while (1){
                 int escolha = 0;
                 printf("\n\n\t\t+---------------DELEÇÃO------------------+\n\t\t|\t\t\t\t\t\t|\n");
-                printf("\n\t\t ( 1 ) Livro  ");
-                printf("\n\t\t ( 2 ) Usuário  ");
-                printf("\n\t\t ( 0 ) voltar  ");
-                printf("\n\t\t Qual opção: ");
+                printf("\t\t | \t\t ( 1 ) . Livro  \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                printf("\t\t | \t\t ( 2 ) . Usuário \t\t | \n\t\t | \t\t\t\t\t\t | \n ");
+                printf("\t\t | \t\t ( 0 ) . Voltar \t\t | \n\t\t | \t\t\t\t\t\t | \n ");
+                printf("\t\t  Qual opção:");
                 if(scanf("%d", &escolha) != 1){
                     printf("\n\t\t Entrada inválida! Digite um número.");
                     while(getchar() != '\n');

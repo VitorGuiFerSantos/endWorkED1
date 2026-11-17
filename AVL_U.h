@@ -215,8 +215,8 @@ void printTreeUser(userTree* nodo){
     if(nodo == NULL) return;
 
     printf("\n | Nome: %s\t\t | ",nodo ->data -> member);
-    printf("\n | E-mail: %s\t | \n",nodo ->data -> gmail);
-    printf("\n | E-mail: %d\t | \n",nodo ->data -> books);
+    printf("\n | E-mail: %s\t | ",nodo ->data -> gmail);
+    printf("\n | Livros retirados: %d\t | \n",nodo ->data -> books);
 }
 
 //output users  with same name 
