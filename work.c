@@ -4,238 +4,752 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <math.h>
+#include <unistd.h>
+#include <inttypes.h>
 #include <time.h>
+#include "TAD.h"
+#include "AVL_B.h"
+#include "AVL_U.h"
+#include "listEnB.h"
+#include "listEnU.h"
 #define MAXchar 300
-//struct to user
-typedef struct _user{
-    //weigth para que eu possa organizar em arvore essa estrutura
-    int weight;
-    char member[MAXchar];
-    char gmail[MAXchar];
-}User;
-//struct to book 
-typedef struct _dados{
-    uint64_t id;
-    char title[MAXchar];
-    char author[MAXchar];
-    int year;
-    bool status[MAXchar];
-    User userLent[MAXchar];
-    int amount;
-    int amountLent;
-}Book;  
-// criar uma estrutura de controle para heaps 
-struct _treeB{
-    Book *data;
-    int height;
-    struct _treeB *right;
-    struct _treeB *left;
-};
-typedef struct _treeB Node;
-Node *createElemnt(char title[], char author[], int year, int amount, uint64_t id){
-
-    Book *newdata = malloc( sizeof ( Book ) );
-    Node *new = malloc( sizeof ( Node ) );
-
-    newdata -> id = id;
-    newdata -> year = year; 
-    //quantity book
-    newdata -> amount = amount;
-    //none lent
-    newdata -> amountLent = 0;
-
-    strcpy( newdata -> author,author); 
-    strcpy( newdata -> title,title); 
-
-    // função que define que todos os livros estão diponível
-    memset(newdata -> status, false, sizeof(newdata -> status)); 
-
-    new -> data = newdata;
-    new -> height = 1;
-    new -> left = NULL;
-    new -> right = NULL;
-    return new;
- }
- 
-//função ID
-uint64_t newID(uint64_t* ref, uint64_t* p ,uint64_t* n, uint64_t* cont){
-    if( *cont % 2 == 0 || *n == *ref){
-        (*cont)++;
-        (*p)++;
-        return *ref + *p;
-    }
-    (*cont)++;
-    (*n++);
-    return *ref - *n;
-}
-// função que configura a altura do nó
-int height(Node* root){
-    if(root == NULL){
-        return 0;
-    }
-    return root->height;
-}
-int max(int a,int b){
-    return a > b ? a : b;
-}
-//função que garante que a árvore sempre fique balaceada
-int getBalance(Node* root){
-    if(root == NULL){
-        return 0;
-    }
-    return height(root -> left) - height(root -> right);
-}
-//rotate left for right
-Node* rotateRR(Node* root){
-    //the node take on the root
-    Node* aux = root->left;
-    //warden the right son aux
-    Node* temp = aux->right;
-    
-    // root tack on the position of right son
-    aux -> right = root;
-    //how the left son take your position he taje on the right son of aux
-    root -> left = temp;
-    
-    //recalculate the son heights
-    root->height = 1 + max( height(root -> left), height(root -> right) );
-    aux->height = 1 + max( height(aux -> left), height(aux -> right) );
-    
-    //aux take on the roles father thas subtree
-    return aux;
-}
-//rotate right for left
-Node* rotateLL(Node* root){
-
-    //the node take on the root
-    Node* aux = root->right;
-    //warden the left son aux
-    Node* temp = aux->left;
-    
-    // root tack on the position of left son
-    aux -> left = root;
-    //how the right son take your position he taje on the left son of aux
-    root -> right = temp;
-    
-    //recalculate the son heights
-    root->height = 1 + max( height(root -> left), height(root -> right) );
-    aux->height = 1 + max( height(aux -> left), height(aux -> right) );
-    
-    //aux take on the roles father thas subtree
-    return aux;
-}
-//AVL insertion
-Node* inBalance( Node* root, Node* new){
-    int fb = getBalance(root);
-    // 1° case right-right: change the element for left 
-    if( fb < -1 && new -> data -> id > root -> right -> data -> id){
-        return rotateLL(root);
-    }
-    //2° case left-left change the element for right
-    if(fb > 1 && new -> data -> id < root -> left -> data -> id){
-        return rotateRR(root);
-    }
-    //3° case right-left: change the element for right to become right-right and treat how 1° case 
-    if(fb < -1 && new -> data -> id < root -> right -> data -> id){
-        root -> right = rotateRR(root -> right);
-        return rotateLL(root);
-    }
-    //4° case left-right change the element for left to become(para tornar) left-left and treat how 2° case
-    if(fb > 1 && new -> data -> id > root -> left -> data -> id){
-        root -> left = rotateLL(root -> left);
-        return rotateRR(root);
-    }
-    
-    return root;
-}
- //add elements in the tree in a banlance
-  Node *addTree(Node *root, Node *new){
-    if(root == NULL){
-        return new;
-    }
-    if(root -> data -> id > new -> data -> id){
-        root -> left = addTree(root -> left, new);
-    }else{
-        if(root -> data -> id < new -> data -> id){
-            root -> right = addTree(root -> right, new);
-        }else{
-            return root;
-        }
-    }
-    root -> height = 1 + max( height( root -> left), height( root -> right)); 
-    
-   return root = inBalance(root,new);
-
- }
- //delele the elements in the tree
- Node *deleteElemnt(Node *root, int id){
-    if(root == NULL){
-        return root;
-    }
-    if(root -> data -> id > id){
-        root -> left = deleteElemnt( root-> left, id);
-    }else{
-        root -> right= deleteElemnt( root-> right, id);
-    }
-    if(root -> data -> id == id){
-        if(root -> left == NULL){
-            Node *aux = root -> right;
-            free(root->data);
-            free(root);
-            return aux;
-        }
-        if(root -> right == NULL){
-            Node *aux = root -> left;
-            free(root->data);
-            free(root);
-            return aux;
-        }
-        Node *aux = root -> right;
-        for(; aux ->left!= NULL; aux = aux ->left){}
-        root ->data = aux -> data;
-        root ->right= deleteElemnt(root -> right, aux -> data -> id);
-    }
-    
-    root -> height = 1 + max( height( root -> left), height( root -> right)); 
-    
-    int  balanc = getBalance( root);
-    
-    return root;
- }
- void inOrder(Node *aux){
-    if(aux == NULL){
-        return;
-    }
-    inOrder(aux -> left);
-printf("ID: %lu | Altura: %d | FB: %d\n", aux->data->id, aux->height, getBalance(aux));
-    inOrder(aux -> right);
- }
- void printTreeHeight(Node *aux){
-    if(aux == NULL){
-        return;
-    }
-    printTreeHeight(aux -> left);
-    printf(" |%d|", aux -> height);
-    printTreeHeight(aux -> right);
- }
 int main(){
     //control ID
-    uint64_t ref = 4294967296, idP = 1,ipN = 0, ID, control = 0;
-    Node *root = malloc( sizeof (Node));
-    root = NULL;
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,2));
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,3));
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,8));
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,6));
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,7));
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,5));
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,4));
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,1));
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,9));
-    root = addTree(root, createElemnt("paz"," paz", 2006,4,10));
+   
+    int c;
+    uint64_t ref = 4294967296, idP = 1,ipN = 0, control = 0;
+    treeBook* rootBook = NULL;
+    userTree* rootUser = NULL;
 
-    inOrder(root);
-    printf("\n");
-/*     printTreeHeight(root); */
+    //opções
+    int opc,op_cad;
+
+    bool ever = true;
+
+    rootBook = registerBooksFile(rootBook,"test.txt",&ref,&idP,&ipN,&control);
+    rootUser = registerUsersFile(rootUser,"usuarios.txt");
+
+    for(;ever;){
+
+        printf("\n\t\t +---------------------MENU----------------------+ \n");
+        printf("\t\t | \t\t ( 1 ) . Cadastro \U0001F4DD \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+        printf("\t\t | \t\t ( 2 ) . Consulta \U0001F50D \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+        printf("\t\t | \t\t ( 3 ) . Atualização \U0001F504 \t | \n\t\t | \t\t\t\t\t\t | \n");
+        printf("\t\t | \t\t ( 4 ) . Exclusão \U0001F5D1 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+        printf("\t\t | \t\t ( 5 ) . Empréstimo \U0001F4D6 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+        printf("\t\t | \t\t ( 6 ) . Devolução \U0001F4DA \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+        printf("\t\t | \t\t ( 0 ) . Voltar \u21A9 \t\t |");
+        printf("\n\t\t +-----------------------------------------------+ \n\n");
+        usleep(1000);
+
+        printf("\n\t\t Escolha uma opção: ");
+        if(scanf("%d", &opc) != 1){
+            printf("\n\t\t Entrada inválida! Digite um número.");
+            while(getchar() != '\n');
+            continue;
+        }
+
+        if(opc == 0){
+            break;
+        }
+
+        if(opc == 1){
+            printf("\n\n\t\t +-------------OPÇÕES-DE-CADASTRO----------------+ \n\t\t | \t\t\t\t\t\t | \n");
+            printf("\t\t | \t\t ( 1 ) . Livros \U0001F4DA \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+            printf("\t\t | \t\t ( 2 ) . Usuários \xF0\x9F\x91\xA4 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+            printf("\t\t | \t\t ( 0 ) . Voltar \u21A9 \t\t |");
+            printf("\n\t\t +-----------------------------------------------+\n\n");
+
+            printf("\n\t\t Escolha uma opção: ");
+            if(scanf("%d", &op_cad) != 1){
+                printf("\n\t\t Entrada inválida! Digite um número.");
+                while(getchar() != '\n');
+                continue;
+            }
+
+            if(op_cad == 1){
+                int escolha = 0;
+                treeBook* newBook = creatBook(newID(&ref,&idP,&ipN,&control)), *temp;
+
+                temp = searchCopyBook(rootBook,newBook ->data ->title);
+
+                if(temp == NULL){
+                    rootBook = addBook(rootBook,newBook);
+                    printf("\n\t\t Livro cadastrado com êxito! \n");
+                    continue;
+                }else{
+                    printf("\n\t\t\t\t Esse livro já existe no acervo!\n\n\tDeseja adicionar uma cópia deste livro: \n");
+                    printf("\t\t | \t\t ( 1 ) . Sim \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                    printf("\t\t | \t\t ( 2 ) . Não \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                    printf("\t\t | \t\t ( 0 ) . Menu principal \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+
+                    printf("\n\t\t Qual opção deseja: ");
+                    if(scanf("%d", &escolha) != 1){
+                        printf("\n\t\t Entrada inválida! Digite um número.");
+                        while(getchar() != '\n');
+                        continue;
+                    }
+                    if( escolha == 1){
+                        temp ->data ->amount++;
+                        printf("\n\t\t\t\t Livro adicionado com êxito! \n");
+                    }else if(escolha == 2){
+                        sprintf(newBook -> data ->title + strlen(newBook -> data ->title), "-%"SCNu64, newBook ->data ->id );
+                        rootBook = addBook(rootBook,newBook);
+                        printf("\n\t\t\t\t Livro cadastrado com êxito! \n");
+                        continue;
+                    }
+                    free(newBook ->data);
+                    free(newBook ->wardenU);
+                    free(newBook);
+                }
+                continue;
+            }
+            if(op_cad == 2){
+                userTree *newUser = creatUser(rootUser);
+
+                if(newUser != NULL){
+                    rootUser = addUser(rootUser,newUser);
+                }
+                continue;
+            }
+        }
+        if(opc == 2){
+            while(1){
+                int escolha1 = 0,escolha2 = 0;
+                bool cond = false;
+                treeBook* tempoB = NULL;
+                userTree* tempoU = NULL;
+
+                printf("\n\n\t\t +-------------OPÇÕES-DE-CONSULTA----------------+ \n\t\t | \t\t\t\t\t\t | \n");
+                printf("\t\t | \t\t ( 1 ) . Livros \U0001F4DA \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                printf("\t\t | \t\t ( 2 ) . Usuários \xF0\x9F\x91\xA4 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                printf("\t\t | \t\t ( 0 ) . Voltar \u21A9 \t\t |");
+                printf("\n\t\t +-----------------------------------------------+ \n\n");
+
+                printf("\n\t\t\t\t Escolha uma opção: ");
+                if(scanf("%d", &escolha1) != 1){
+                    printf("\n\t\t\t\t Entrada inválida! Digite um número.");
+		    printf("\n\t\t\t\t Escolha uma opção: ");
+                    while((c = getchar()) != '\n' && c != EOF);
+                    continue;
+                }
+                if(escolha1 == 0){
+                    break;
+                }
+                if(escolha1 == 1){
+                    while(1){
+                        printf("\n\n\t\t +---------OPÇÕES-DE-CONSULTA-PARA-LIVRO---------+ \n \t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 1 ) . Código \U0001F522\t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 2 ) . Autor \xF0\x9F\x91\xA4 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 3 ) . Empréstimos \U0001F4D6 \t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 4 ) . Todo o registro \U0001F4DA\t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 0 ) . Voltar \u21A9\t\t |");
+                        printf("\n\t\t +-----------------------------------------------+ \n\n");
+
+                        printf("\n\t\t\t\t Escolha uma opção: ");
+                        if(scanf("%d", &escolha2) != 1){
+                            printf("\n\t\t\t\t Entrada inválida! Digite um número.");
+			    printf("\n\t\t\t\t Escolha uma opção: ");
+                            while((c = getchar()) != '\n' && c != EOF);
+                            continue;
+                        }
+                        if(escolha2 == 0){
+                            break;
+                        }
+                        if(escolha2 == 1){
+                            uint64_t cod;
+                            printf("\n\t\t\t\t Digite o código do livro: ");
+                            if(scanf("%" SCNu64, &cod) != 1){
+                                printf("\n\t\t\t\t Entrada inválida! Digite um número.");
+                                while((c = getchar()) != '\n' && c != EOF);
+                                continue;
+                            }
+                            tempoB = searchIdBook(rootBook,cod);
+
+                            if(tempoB == NULL){
+                                printf("\n\t\t | \t Livro não encontrado \t | \n");
+                            }
+
+                            printTreeBook(tempoB);
+                        }else if(escolha2 == 2){
+
+                            while ((c = getchar()) != '\n' && c != EOF);
+                            char author[MAXchar];
+
+                            printf("\n\t\t\t\t Digite o autor dos livros: ");
+                            fgets(author,MAXchar-1,stdin);
+
+                            author[strcspn(author, "\n")] = '\0';
+
+                            searchAuthorBook(rootBook,author,&cond);
+
+                            printf("\n\t\t +---------------------------------------+ \n");
+                            if(cond == false){
+                                printf("\t\t\t\t Não foi possível encontrar livros \n");
+                                printf("\t\t\t\t desse autor!");
+                            }
+                            printf("\n\t\t +---------------------------------------+ \n");
+
+                        }else if(escolha2 == 3){
+
+                            uint64_t cod;
+                            printf("\n\t\t\t\t Digite o código do livro: ");
+                            if(scanf("%" SCNu64, &cod) != 1){
+                                printf("\n\t\t\t\t Entrada inválida! Digite um número.");
+                                printf("\n\t\t\t\t Escolha uma opção: ");
+                                while((c = getchar()) != '\n' && c != EOF);
+                                continue;;
+                            }
+                            tempoB = searchIdBook(rootBook,cod);
+
+                            if(tempoB == NULL){
+                                printf("\n\t\t | \t Livro não encontrado! \t | \n");
+                            }else{
+                                printWDogUser(tempoB -> wardenU);
+                            }
+
+                        }else if(escolha2 == 4){
+                            //printa todos os livros
+                            inOrderB(rootBook);
+                        }
+                    }
+                }else if(escolha1 == 2){
+                    while (1){
+
+                        printf("\n\n\t\t +---------OPÇÕES-DE-CONSULTA-PARA-USUÁRIO-------+ \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 1 ) . E-mail \u2709\uFE0F \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 2 ) . Nome \U0001FAAA \t\t | \n\t\t | \t\t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 3 ) . Empréstimos \U0001F4D6 \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 4 ) . Todo o registro \U0001F4DA \t | \n\t\t | \t\t\t\t\t\t | \n");
+                        printf("\t\t | \t\t ( 0 ) . Voltar \u21A9 \t\t |");
+                        printf("\n\t\t +-----------------------------------------------+ \n\n");
+
+                        printf("\n\t\t\t\t Escolha a opção uma opção: ");
+                        if(scanf("%d", &escolha2) != 1){
+                            printf("\n\t\t\t\t Entrada inválida! Digite um número.");
+			                printf("\n\t\t\t\t Escolha uma opção: ");
+                            while((c = getchar()) != '\n' && c != EOF);
+                            continue;
+                        }
+                        if(escolha2 == 0){
+                            break;
+                        }
+                        if(escolha2 == 1){
+                            
+                            while ((c = getchar()) != '\n' && c != EOF);
+                            char gmail[MAXchar];
+                            printf("\n\t\t\t\t E-mail do usuário: :  ");
+                            scanf("%s",gmail);
+                            
+                            tempoU = searchCopyUser(rootUser,gmail);
+
+                            if(tempoU == NULL){
+                                printf("\n\t\t\t\t Usuário não encontrado!\n");
+                            }else{
+                                printTreeUser(tempoU);
+                            }
+                            
+                        }else if(escolha2 == 2){
+                            
+                            char member[MAXchar];
+                            while ((c = getchar()) != '\n' && c != EOF);
+                            printf("\n\t\t\t\t Nome do usuário: ");
+                            fgets(member,MAXchar-1,stdin); 
+                            member[strcspn(member, "\n")] = '\0';
+
+                            bool cond = false;
+                            searchNameUser(rootUser,member,&cond);
+                            
+                            if(cond == false){
+                                printf("\n\t\t\t\t Usuário não encontrado! \n");
+                            }
+                        }else if(escolha2 == 3){
+
+                            while ((c = getchar()) != '\n' && c != EOF);
+                            char gmail[MAXchar];
+                            
+                            printf("\n\t\t\t\t E-mail do usuário com os livros: ");
+                            scanf("%s",gmail);
+  
+                            tempoU = searchCopyUser(rootUser,gmail);
+                            
+                            if(tempoU == NULL){
+                                printf("\n\t\t\t\t Usuário não encontrado! \n");
+                            }else{
+                                printWDogBook(tempoU ->wardenB);
+                            }
+                        }else if(escolha2 == 4){
+                            inOrderU(rootUser);
+                        }
+                    }
+                }
+            }
+        }
+        if(opc == 3){
+            while (1){
+                int code = 0;
+                printf("\n\n\t\t +---------------ATUALIZAÇÃO------------------+ \n\t\t | \t\t\t\t\t\t | \n");
+                printf("\n\t\t ( 1 ) Livro  ");
+                printf("\n\t\t ( 2 ) Usuário  ");
+                printf("\n\t\t ( 3 ) Renovar empréstimo");
+                printf("\n\t\t ( 0 ) voltar  ");
+                printf("\n\t\t +-----------------------------------------------+ \n\n");
+                
+                printf("\n\t\t\t\t Qual opção: ");
+                if(scanf("%d", &code) != 1){
+                    printf("\n\t\t\t\t Entrada inválida! Digite um número.");
+                    printf("\n\t\t\t\t Qual opção: ");
+                    while((c = getchar()) != '\n' && c != EOF);
+                    continue;
+                }
+                if(code == 0){
+                    break;
+                }
+                if(code == 1){
+                    uint64_t id = 0;
+                    treeBook *auxBk = NULL;
+
+                    printf("\n\t\t\t\t Insira o código do livro para alterar as informações: ");
+                    if(scanf("%"SCNu64, &id) != 1){
+                        printf("\n\t\t\t\t Entrada inválida! Digite um número.");
+                        while((c = getchar()) != '\n' && c != EOF);
+                        continue; 
+                    }
+                    auxBk = searchIdBook(rootBook,id);
+                    
+                    if(auxBk == NULL){
+                        printf("\n\t\t Livro não encontrado!");
+                        continue;
+                    }
+
+                    printf("\n\t\t Livro encontrado!");
+                    printTreeBook(auxBk);
+                    printf("\n\t\t Caso não queira alterar alguma informação, só repita a dado que já estava!"); 
+                    
+                    while ((c = getchar()) != '\n' && c != EOF);
+
+                    memset(auxBk -> data -> title, 0, sizeof(auxBk -> data -> title));
+                    printf("\n\t\t Nome do livro: ");
+                    fgets(auxBk -> data -> title,MAXchar-1,stdin); 
+                    auxBk  -> data -> title[strcspn(auxBk -> data -> title,"\n") ]= 0;
+
+                    memset(auxBk -> data -> author, 0, sizeof(auxBk -> data -> author));
+                    printf("\n\t\t Autor do livro: ");
+                    fgets(auxBk -> data -> author,MAXchar-1,stdin); 
+                    auxBk -> data -> author[strcspn(auxBk -> data -> author,"\n") ]= 0;
+
+                    printf("\n\t\t Ano de publicação do livro: ");
+                    scanf("%d", &auxBk->data->year);
+
+                    printf("\n\t\t Livro atulizado com êxito");
+                    continue;
+                }
+                if(code == 2){
+                    char gmail[MAXchar];
+                    userTree *auxUs = NULL;
+                    printf("\n\t\t Insira o e-mail do usuário para alterar as informações: ");
+                    scanf("%s",gmail);
+                    auxUs = searchCopyUser(rootUser,gmail);
+                    if(auxUs == NULL){
+                        printf("\n\t\t Usuário não encontrado!");
+                        continue;
+                    }
+                    printf("\n\t\t Usuário encontrado!");
+                    printTreeUser(auxUs);
+                    printf("\n\t\t Caso não queira alterar alguma informação, só repita a dado que já estava!");
+                    
+                    while ((c = getchar()) != '\n' && c != EOF);
+                    memset(auxUs -> data -> member, 0, sizeof(auxUs -> data -> member));
+                    fgets(auxUs ->data -> member,MAXchar-1,stdin);  
+                    auxUs -> data -> member[strcspn(auxUs -> data -> member,"\n") ]= 0;
+
+                    printf("\n\t\t Usuário atulizado com êxito");
+                    continue;
+                }
+                if(code == 3){
+                    char gmail[MAXchar];
+                    userTree *auxUs = NULL;
+                    uint64_t id = 0;
+
+                    printf("\n\t\t Insira o e-mail do usuário para atulizar o empréstimo: ");
+                    scanf("%s",gmail);
+
+                    auxUs = searchCopyUser(rootUser,gmail);
+
+                    if(auxUs == NULL){
+                        printf("\n\t\t Usuário não encontrado!");
+                        continue;
+                    }
+
+                    if(auxUs ->data->books == 0){
+                        printf("\n\t\t Esse usuário não retirou nenhum livro!");
+                        continue;
+                    }
+
+                    printf("\n\t\t Insira o código do livro para alterar as informações: ");
+                    scanf("%" SCNu64, &id);
+
+                    ListD_E_Book *livro = returnBook(auxUs -> wardenB,id);
+                    
+                    if(livro == NULL){
+                        printf("\n\t\t Livro não encontrado!");
+                        continue;
+                    }
+                    printf("\n\t\t Livro encontrado!");
+
+                    time_t agora = time(NULL);
+                    struct tm *data = localtime(&agora);
+
+                    Date today = { data->tm_mday, data->tm_mon + 1, data->tm_year + 1900};
+
+                    if(isLate(livro->loanEnd, &today)){
+                        printf("\n\t\t Livro atrasado!");
+                        printf("\n\t\t A devolução após o prazo estará sujeita à multa! ");
+                        printf("\n\t\t Renovação indisponível. É necessário devolver o item. \n");
+                        continue;
+                    }else{
+                        livro->loanEnd->day = today.day;
+                        livro->loanEnd->month = today.month;
+                        livro->loanEnd->year = today.year;
+
+                        livro->loanSt->day = today.day;
+                        livro->loanSt->month = today.month;
+                        livro->loanSt->year = today.year;
+
+                        Date *newEnd = returnDate(today.day, today.month, today.year);
+
+                        livro->loanEnd->day = newEnd->day;
+                        livro->loanEnd->month = newEnd->month;
+                        livro->loanEnd->year = newEnd->year;
+
+                        free(newEnd);
+
+                        printf("\n\t\t Livro renovado! ");
+                        printf("\n\t\t Data devolução: ");
+                        printDate(livro->loanEnd);
+                        printf("\n");
+                    }
+
+                }
+            }
+        }
+        if(opc == 4){
+            while (1){
+                int escolha = 0;
+                printf("\n\n\t\t+---------------DELEÇÃO------------------+\n\t\t|\t\t\t\t\t\t|\n");
+                printf("\t\t | \t\t ( 1 ) . Livro  \t\t | \n\t\t | \t\t\t\t\t\t | \n");
+                printf("\t\t | \t\t ( 2 ) . Usuário \t\t | \n\t\t | \t\t\t\t\t\t | \n ");
+                printf("\t\t | \t\t ( 0 ) . Voltar \t\t | \n\t\t | \t\t\t\t\t\t | \n ");
+                printf("\t\t  Qual opção:");
+                if(scanf("%d", &escolha) != 1){
+                    printf("\n\t\t Entrada inválida! Digite um número.");
+                    printf("\t\t  Qual opção:");
+                    while(getchar() != '\n');
+                    continue;
+                }
+                if(escolha == 0){
+                    break;
+                }
+                if(escolha == 1){
+                    uint64_t id = 0;
+                    treeBook* auxBk = NULL;
+
+                    printf("\n\n\t\t +---------------DELEÇÃO------------------+ \n");
+                    printf("\n\t\t Insira o código do livro para deletar: ");
+
+                    if(scanf("%" SCNu64, &id) != 1){
+                        printf("\n\t\t Entrada inválida! Digite um número.");
+                        printf("\n\t\t Insira o código do livro para deletar: ");
+                        int c;
+                        while((c = getchar()) != '\n' && c != EOF);
+                        continue;
+                    }
+
+                    auxBk = searchIdBook(rootBook,id);
+
+                    if(auxBk == NULL){
+                        printf("\n\t\t Livro não encontrado!");
+                        continue;
+                    }
+
+                    printf("\n\t\t Livro encontrado!");
+                    printTreeBook(auxBk);
+
+                    WDogUser* copUS = auxBk->wardenU;
+
+                    while(copUS->first != NULL){
+                        ListD_E_user* noU = copUS->first;
+                        ListD_E_Book* noB = noU->correspondingLoan;
+
+                        Date* St = noU->loanSt;
+                        Date* En = noU->loanEnd;
+
+                        noU->data->books--;
+
+                        returnLoanBook(noU->otherWarden,noB);
+                        returnLoanUser(copUS,noU);
+
+                        free(St);
+                        free(En);
+                        free(noB);
+                        free(noU);
+                    }
+
+                    uint64_t idDelete = auxBk->data->id;
+
+                    free(copUS);
+                    auxBk->wardenU = NULL;
+
+                    rootBook = deleteBook(rootBook,idDelete);
+
+                    printf("\n\t\t Livro deletado do acervo!");
+                    continue;
+                }
+                if(escolha == 2){
+                    char gmail[MAXchar];
+                    userTree* auxUs = NULL;
+
+                    printf("\n\n\t\t +---------------DELEÇÃO DE USUÁRIO------------------+ \n");
+                    printf("\n\t\t Insira o e-mail do usuário para deletar: ");
+
+                    if(scanf("%299s",gmail) != 1){
+                        printf("\n\t\t Entrada inválida!");
+                        printf("\n\t\t Insira o e-mail do usuário para deletar: ");
+                        int c;
+                        while((c = getchar()) != '\n' && c != EOF);
+                        continue;
+                    }
+
+                    auxUs = searchCopyUser(rootUser,gmail);
+
+                    if(auxUs == NULL){
+                        printf("\n\t\t Usuário não encontrado!");
+                        continue;
+                    }
+
+                    printf("\n\t\t Usuário encontrado!");
+                    printTreeUser(auxUs);
+
+                    WDogBook* copUs = auxUs->wardenB;
+
+                    while(copUs->first != NULL){
+                        ListD_E_Book* noB = copUs->first;
+                        ListD_E_user* noU = noB->correspondingLoan;
+
+                        Date* St = noB->loanSt;
+                        Date* En = noB->loanEnd;
+
+                        noB->data->amountLent--;
+
+                        returnLoanUser(noB->otherWarden,noU);
+                        returnLoanBook(copUs,noB);
+
+                        free(St);
+                        free(En);
+                        free(noU);
+                        free(noB);
+                    }
+
+                    rootUser = deleteUser(rootUser,gmail);
+
+                    printf("\n\t\t Usuário deletado com sucesso!");
+                    continue;
+
+                }
+            }
+        }
+        if(opc == 5){
+            uint64_t code = 0;
+            char gmail[MAXchar];
+
+            printf("\n\n\t\t +---------------EMPRÉSTIMO------------------+ \n\t\t | \t\t\t\t\t\t | \n");
+            printf("\n\t\t Informe o Código do livro: ");
+            if(scanf("%"SCNu64, &code) != 1){
+                printf("\n\t\t Entrada inválida! Digite um número.");
+                printf("\n\t\t Informe o Código do livro: ");
+                while((c = getchar()) != '\n' && c != EOF);
+                continue; 
+            }
+            treeBook* auxBK = searchIdBook(rootBook,code);
+
+            if(auxBK == NULL){
+                printf("\n\t\t Livro não encontrado!");
+                continue;
+            }
+            printf("\n\t\t Livro encotrado!");
+            
+            if(auxBK ->data ->amount <= auxBK ->data ->amountLent){
+                printf("\n\t\t Livro indisponível no momento!");
+                continue;
+            }
+            
+            printf("\n\t\t Insira o e-mail do usuário: ");
+            scanf("%s",gmail);
+
+            userTree* auxUs = NULL;
+            auxUs = searchCopyUser(rootUser,gmail);
+
+            if(auxUs == NULL){
+                printf("\n\t\t Usuáio não encontrado!");
+                continue;
+            }
+            printf("\n\t\t Usuário encotrado!");
+
+            Date* start = malloc(sizeof(Date));
+            Date* end = NULL;
+
+            printf("\n\t\t Data de retirada (dia mês ano): ");
+
+            if(scanf("%d %d %d", &start->day, &start->month, &start->year) != 3){
+                printf("\n\t\t Entrada inválida! Digite uma data válida.");
+                printf("\n\t\t Data de retirada (dia mês ano): ");
+                while((c = getchar()) != '\n' && c != EOF);
+                continue;
+            }
+            end = returnDate(start -> day, start -> month, start -> year);
+            if(end == NULL){
+                printf("\n\t\t Erro ao alocar memória para a data de devolução!");
+                free(start);
+                continue;
+            }
+            ListD_E_user * coorU = createLoanUser( start,end, auxUs -> data); 
+            ListD_E_Book * coorB = createLoanBook( start,end, auxBK -> data);
+
+            // pointer for the nodo corresponding
+            coorB->correspondingLoan = coorU;
+            coorU->correspondingLoan = coorB;
+
+            // pointer for the warden list
+            coorU->otherWarden = auxUs->wardenB;
+            coorB->otherWarden = auxBK->wardenU;
+            
+            addLoanBook(auxUs -> wardenB,coorB);
+            addLoanUser(auxBK -> wardenU,coorU);
+
+            //increment 
+            auxBK -> data ->amountLent++;
+            auxUs -> data ->books ++;
+
+            printf("\n\t\t Data devolução: ");
+            printDate(end);
+            printf("\n");
+            printf("\n\t\t A devolução após o prazo estará sujeita à multa!");
+            printf("\n\t\t Informação adicional:");
+            printf("\n\t\t Para renovar o empréstimo é na seção de (Atualização)!");
+        }  
+        if(opc == 6){
+            char  gmail[MAXchar];
+            uint64_t code = 0;
+
+            printf("\n\n\t\t +---------------DEVOLUÇÂO------------------+ \n\t\t | \t\t\t\t\t\t | \n");
+            printf("\n\t\t Informe o e-mail do usuário: ");
+            scanf("%s", gmail);
+
+            userTree *auxUs = searchCopyUser(rootUser,gmail);
+            if(auxUs == NULL){
+                printf("\n\t\t Usuário não encontrado!");
+                continue;
+            }
+            if(auxUs -> wardenB -> first == NULL){
+                printf("\n\t\t Nenhum livro retirado\n");
+                continue;
+            }
+
+            printf("\n\t\t Livros retirados pelo usuário :");
+            printWDogBook(auxUs->wardenB);
+
+            printf("\n\t\t Insira o código do livro para devolver:");
+            if(scanf("%" SCNu64, &code) != 1){
+                printf("\n\t\t Entrada inválida! Digite um número.");
+                printf("\n\t\t Insira o código do livro para devolver:");
+                int c;
+                while((c = getchar()) != '\n' && c != EOF);
+                continue;
+            }
+            ListD_E_Book *loanB = returnBook(auxUs -> wardenB,code);
+
+            if(loanB == NULL){
+                printf("\n\t\t Livro não encontrado!");
+                continue;;
+            }
+
+            printf("\n\t\t Livro encontrado!");
+
+
+            time_t agora = time(NULL);
+            struct tm *data = localtime(&agora);
+
+            Date today = { data->tm_mday, data->tm_mon + 1, data->tm_year + 1900};
+
+            if(isLate(loanB->loanEnd, &today)){
+                printf("\n\t\t Livro em atraso!");
+                printf("\n\t\t A devolução após o prazo estará sujeita à multa.");
+            }
+            
+            ListD_E_user *loanU = loanB->correspondingLoan;
+
+            Date *St = loanB ->loanSt,* En = loanB ->loanEnd;
+            
+            returnLoanBook(loanU -> otherWarden,loanB);
+            returnLoanUser(loanB ->otherWarden, loanU);
+            
+            auxUs->data->books--;
+            loanB->data->amountLent--;
+
+            free(loanB);
+            free(loanU);
+            free(St);
+            free(En);
+            printf("\n\t\t Livro devolvido! Volte sempre.");
+        }
+    }
+
+    usleep(30000); printf("\n");
+    usleep(30000); printf("              _..__\n");
+    usleep(30000); printf("            .' I   '.\n");
+    usleep(30000); printf("            |.-\"\"\"-.|\n");
+    usleep(30000); printf("           _;.-\"\"\"-.;_\n");
+    usleep(30000); printf("       _.-' _..-.-.._ '-._\n");
+    usleep(30000); printf("      ';--.-(_o_I_o_)-.--;'\n");
+    usleep(30000); printf("       `. | |  | |  | | .`\n");
+    usleep(30000); printf("         `-\\|  | |  |/-'\n");
+    usleep(30000); printf("            |  | |  |\n");
+    usleep(30000); printf("            |  \\_/  |\n");
+    usleep(30000); printf("         _.'; ._._. ;'._\n");
+    usleep(30000); printf("     _.-'`; | \\  -  / | ;'-.\n");
+    usleep(30000); printf("   .' :  /  |  |   |  |  \\  '.\n");
+    usleep(30000); printf("  /   : /__ \\  \\___/  / __\\ : `.\n");
+    usleep(30000); printf(" /    |   /  '._/_\\_.'  \\   :   `\\\n");
+    usleep(30000); printf("/     .  `---;\"\"\"\"\"'-----`  .     \\\n");
+    usleep(30000); printf("/      |      |()    ()      |      \\\n");
+    usleep(30000); printf("/      /|      |              |\\      \\\n");
+    usleep(30000); printf("/      / |      |()    ()      | \\      \\\n");
+    usleep(30000); printf("|    <jgs\\_,,___|_.....____,,__/  `>     |\n");
+    usleep(30000); printf("\\     \\   |][     |   |    ][ |   /     /\n");
+    usleep(30000); printf(" \\     \\ ;=\"\"====='\"\"\"'====\"\"==; /     /\n");
+    usleep(30000); printf("  |/`\\  \\/      |()    ()      \\/  /`\\|\n");
+    usleep(30000); printf("   |_/.-';      |              |`-.\\_|\n");
+    usleep(30000); printf("     /   |      ;              :   \\\n");
+    usleep(30000); printf("     |__.|      |              |.__|\n");
+    usleep(30000); printf("         ;      |              |\n");
+    usleep(30000); printf("         |      :              ;\n");
+    usleep(30000); printf("         |      :              |\n");
+    usleep(30000); printf("         ;      |              ;\n");
+    usleep(30000); printf("         ;      |              ;\n");
+    usleep(30000); printf("         |      :              |\n");
+    usleep(30000); printf("         |      |              ;\n");
+    usleep(30000); printf("         |      |              ;\n");
+    usleep(30000); printf("         '-._   ;           _.-'\n");
+    usleep(30000); printf("             `;\"--.....--\";`\n");
+    usleep(30000); printf("              |    | |    |\n");
+    usleep(30000); printf("              |    | |    |\n");
+    usleep(30000); printf("              |    | |    |\n");
+    usleep(30000); printf("              T----T T----T\n");
+    usleep(30000); printf("         _..._L____J L____J _..._\n");
+    usleep(30000); printf("       .` \"-. `%%   | |    %%` .-\" `.\n");
+    usleep(30000); printf("      /      \\    .: :.     /      \\\n");
+    usleep(30000); printf("      '-..___|_..=:` `-:=.._|___..-'\n\n");
+    usleep(900000); printf("    Obrigado por utilizar nossa biblioteca!\n");
+    usleep(90000); printf("             Volte sempre! :)\n\n");
     return 0;
 }

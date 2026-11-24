@@ -1,0 +1,363 @@
+#ifndef AVLB_H
+#define AVLB_H
+#include "TAD.h"
+#include "listEnB.h"
+#include "listEnU.h"
+#include <inttypes.h>
+#include <limits.h> 
+//return height
+int heightBook(treeBook* root){
+    if(root == NULL){
+        return 0;
+    }
+    return root->height;
+}
+//factor balance
+int getBalanceBook(treeBook* root){
+    if(root == NULL){
+        return 0;
+    }
+    return heightBook(root -> left) - heightBook(root -> right);
+}
+
+//rotate for right
+treeBook* rotateRightB(treeBook* root){
+    //the treeBook take on the root
+    treeBook* aux = root -> left;
+    //warden the right son aux
+    treeBook* temp = aux->right;
+    
+    aux -> right = root;
+    root -> left = temp;
+    
+    //recalculate the son heights
+    root->height = 1 + max( heightBook(root -> left), heightBook(root -> right) );
+    aux->height = 1 + max( heightBook(aux -> left), heightBook(aux -> right) );
+    
+    //aux take on the roles father thas subtree
+    return aux;
+}
+//rotate for left
+treeBook* rotateLeftB(treeBook* root){
+
+    treeBook* aux = root->right;
+    treeBook* temp = aux->left;
+    
+    aux -> left = root;
+    root -> right = temp;
+    
+    root->height = 1 + max( heightBook(root -> left), heightBook(root -> right) );
+    aux->height = 1 + max( heightBook(aux -> left), heightBook(aux -> right) );
+    
+    return aux;
+}
+//Condition for AVL both for insertion or deletion
+treeBook* balanceBook(treeBook* root){
+    int fb = getBalanceBook(root);
+    //1°case
+    if(fb > 1 && getBalanceBook(root -> left) >= 0){
+        return rotateRightB(root);
+    }
+    //2°case
+    if(fb < -1 && getBalanceBook(root -> right)<=0){
+        return rotateLeftB(root);
+    }
+    //3°case
+    if(fb > 1 && getBalanceBook(root -> left) < 0){
+        root -> left = rotateLeftB(root ->left);
+        return rotateRightB(root);
+    }
+    //4°case 
+    if(fb <- 1 && getBalanceBook(root -> right)>0){
+        root -> right = rotateRightB( root -> right);
+        return rotateLeftB(root);
+    }
+    return root;
+}
+//return one copy
+treeBook* searchCopyBook(treeBook* rootB,char title[]){
+    if(rootB == NULL){
+        return NULL;
+    }
+    treeBook* aux1 = NULL, *aux = NULL;
+    int com = strcmp(rootB -> data ->title, title);
+    if(com == 0){
+       return rootB;
+    }
+    aux1 = searchCopyBook(rootB -> right,title);
+    
+    if(aux1 != NULL)
+    return aux1;
+
+    aux = searchCopyBook(rootB -> left,title);
+
+    return aux;
+}
+
+treeBook *creatBook(uint64_t id){
+    Book *newdata = malloc( sizeof ( Book ) );
+    treeBook *new = malloc( sizeof ( treeBook ) );
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+    printf("\n\t\t Nome do livro: ");
+    fgets(newdata -> title,MAXchar-1,stdin); 
+    newdata -> title[strcspn(newdata -> title,"\n") ]= 0;
+    
+    printf("\n\t\t Autor do livro: ");
+    fgets(newdata -> author,MAXchar-1,stdin); 
+    newdata -> author[strcspn(newdata -> author,"\n") ]= 0;
+    while(1){
+        printf("\n\t\t Informe o ano de livros: ");
+
+        if(scanf("%d", &newdata -> year) == 1){
+            break;
+        }
+
+        printf("\n\t\t Entrada inválida! Digite um número.");
+        printf("\n\t\t Informe o ano de livros: ");
+
+        while((c = getchar()) != '\n' && c != EOF);
+    }
+    while(1){
+        printf("\n\t\t Informe a quantidade de livros: ");
+
+        if(scanf("%d", &newdata -> amount) == 1){
+            break;
+        }
+
+        printf("\n\t\t Entrada inválida! Digite um número.");
+        printf("\n\t\t Informe a quantidade de livros: ");
+
+        while((c = getchar()) != '\n' && c != EOF);
+    }
+    newdata -> id = id;
+    newdata -> amountLent = 0;
+
+    new -> data = newdata;
+    new -> height = 1;
+    new -> left = NULL;
+    new -> right = NULL;
+    //cop of user with the books
+    new->wardenU = creatWardenUser();;
+    
+    return new;
+ }
+ 
+ //new books in the arbor
+ treeBook *addBook(treeBook *root, treeBook *new){
+   if(root == NULL){
+       return new;
+    }
+   uint64_t id1 = root -> data -> id, id2 = new -> data -> id; 
+   if(id1  < id2){
+       root -> right = addBook(root -> right, new);
+    }else if(id1 > id2){
+        root -> left = addBook(root -> left, new);
+    }else{
+        return root;
+    }
+
+   root -> height = 1 + max( heightBook( root -> left), heightBook( root -> right)); 
+   
+  return root = balanceBook(root);
+}
+
+//delete elements of arbor
+treeBook *deleteBook(treeBook *root, uint64_t id){
+   if(root == NULL){
+       return root;
+    }
+   uint64_t id1 = root -> data -> id; 
+   if(id1  < id){
+       root -> right = deleteBook(root -> right, id);
+   }else{
+       if(id1  > id){
+           root -> left = deleteBook(root -> left, id);
+        }
+   }
+   if(id1 == id){
+       if(root -> left == NULL){
+            treeBook *aux = root -> right;
+            free(root->wardenU);
+            free(root->data);
+            free(root);
+            return aux;
+        }
+       if(root -> right == NULL){
+            treeBook *aux = root -> left;
+            free(root->wardenU);
+            free(root->data);
+            free(root);
+            return aux;
+        }
+        treeBook *aux = root -> right;
+        
+        for(; aux ->left!= NULL; aux = aux ->left){}
+
+        Book* data = root->data;
+        WDogUser* warden = root->wardenU;
+
+        root->data = aux->data;
+        root->wardenU = aux->wardenU;
+
+        aux->data = data;
+        aux->wardenU = warden;
+
+       root ->right= deleteBook(root -> right, aux ->data -> id);
+   }
+   
+   root -> height = 1 + max( heightBook( root -> left), heightBook( root -> right)); 
+   
+   return root = balanceBook(root); 
+}
+
+
+void printTreeBook(treeBook* nodo){
+    if(nodo == NULL) return;
+
+    printf(" \n\t\t | ID: %" PRIu64 ,nodo ->data -> id);
+    printf(" \n\t\t | Título: %s ",nodo ->data -> title);
+    printf(" \n\t\t | Autor: %s ",nodo ->data -> author);
+    printf(" \n\t\t | Ano de publicação: %d  ",nodo ->data -> year);
+    printf(" \n\t\t | Cópias: %d  ",nodo ->data -> amount);
+    printf(" \n\t\t | Copias retiradas: %d \n",nodo ->data -> amountLent);
+}
+//search id and return one copy
+treeBook* searchIdBook(treeBook* rootB, uint64_t id){
+    if(rootB == NULL){
+        return NULL;
+    }
+    if(rootB -> data -> id == id){
+        return rootB;
+    }
+    if(rootB -> data -> id < id){
+        return searchIdBook(rootB -> right, id );
+    }else{
+       return searchIdBook(rootB -> left, id );
+    }
+}
+
+//return all the books of author
+void searchAuthorBook(treeBook* rootB,char author[],bool* cond){
+    if(rootB == NULL){
+        return;
+    }
+    if(strcmp(rootB -> data ->author, author) == 0){
+        printTreeBook(rootB);
+        *cond = true;
+    }
+    searchAuthorBook(rootB->left,author,cond);
+    searchAuthorBook(rootB->right,author,cond);
+}
+
+//print of all the books
+void inOrderB(treeBook *aux){
+    if(aux == NULL){
+        return;
+    }
+    inOrderB(aux -> left);
+    printTreeBook(aux);
+    inOrderB(aux -> right);
+}
+
+//cadastro de livro por um arquivo
+
+treeBook *registerBooksFile(treeBook *root, char filename[], uint64_t *ref, uint64_t *idP, uint64_t *ipN, uint64_t *control){
+    FILE *file = fopen(filename,"r");
+    if(file == NULL){
+        printf("\n\t\t Não foi possível abrir o arquivo!");
+        return root;
+    }
+
+    char line[MAXchar*2+64];
+    int registered = 0, updated = 0, invalid = 0;
+
+    while(fgets(line,sizeof(line),file) != NULL){
+        line[strcspn(line,"\r\n")] = '\0';
+
+        char *title = line;
+        char *author = strchr(title,';');
+        if(author == NULL){
+            invalid++;
+            continue;
+        }
+        *author = '\0';
+        author++;
+
+        char *yearField = strchr(author,';');
+        if(yearField == NULL){
+            invalid++;
+            continue;
+        }
+        *yearField = '\0';
+        yearField++;
+
+        char *amountField = strchr(yearField,';');
+        if(amountField == NULL || strchr(amountField+1,';') != NULL){
+            invalid++;
+            continue;
+        }
+        *amountField = '\0';
+        amountField++;
+
+        char *endYear, *endAmount;
+        long year = strtol(yearField,&endYear,10);
+        long amount = strtol(amountField,&endAmount,10);
+
+        if(title[0] == '\0' || author[0] == '\0' || strlen(title) >= MAXchar || strlen(author) >= MAXchar || endYear == yearField || endAmount == amountField || *endYear != '\0' || *endAmount != '\0' || year <= 0 || year > INT_MAX || amount <= 0 || amount > INT_MAX){
+            invalid++;
+            continue;
+        }
+
+        treeBook *temp = searchCopyBook(root,title);
+
+        if(temp != NULL){
+            if(temp->data->amount > INT_MAX - amount){
+                invalid++;
+                continue;
+            }
+            temp->data->amount += amount;
+            updated++;
+            continue;
+        }
+
+        Book *newdata = malloc(sizeof(Book));
+        treeBook *new = malloc(sizeof(treeBook));
+        WDogUser *warden = creatWardenUser();
+
+        if(newdata == NULL || new == NULL || warden == NULL){
+            free(newdata);
+            free(new);
+            free(warden);
+            invalid++;
+            continue;
+        }
+
+        strcpy(newdata->title,title);
+        strcpy(newdata->author,author);
+        newdata->year = year;
+        newdata->amount = amount;
+        newdata->amountLent = 0;
+        newdata->id = newID(ref,idP,ipN,control);
+
+        new->data = newdata;
+        new->height = 1;
+        new->left = NULL;
+        new->right = NULL;
+        new->wardenU = warden;
+
+        root = addBook(root,new);
+        registered++;
+    }
+
+    fclose(file);
+
+    printf("\n\t\t Cadastro por arquivo concluído!");
+    printf("\n\t\t Livros cadastrados: %d",registered);
+    printf("\n\t\t Quantidade atualizada: %d",updated);
+    printf("\n\t\t Linhas inválidas: %d\n",invalid);
+    sleep(1);
+    return root;
+}
+
+#endif

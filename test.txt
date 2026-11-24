@@ -1,0 +1,200 @@
+O Hobbit;J.R.R. Tolkien;1937;5
+Dom Casmurro;Machado de Assis;1899;3
+A Arte da Guerra;Sun Tzu;500;2
+O Senhor dos Anéis: A Sociedade do Anel;J.R.R. Tolkien;1954;2
+O Senhor dos Anéis: As Duas Torres;J.R.R. Tolkien;1954;1
+O Senhor dos Anéis: O Retorno do Rei;J.R.R. Tolkien;1955;5
+1984;George Orwell;1949;4
+A Revolução dos Bichos;George Orwell;1945;4
+O Pequeno Príncipe;Antoine de Saint-Exupéry;1943;3
+Cem Anos de Solidão;Gabriel García Márquez;1967;2
+O Amor nos Tempos do Cólera;Gabriel García Márquez;1985;9
+Memórias Póstumas de Brás Cubas;Machado de Assis;1881;2
+Quincas Borba;Machado de Assis;1891;10
+Esaú e Jacó;Machado de Assis;1904;7
+Memorial de Aires;Machado de Assis;1908;1
+Grande Sertão: Veredas;João Guimarães Rosa;1956;1
+Sagarana;João Guimarães Rosa;1946;2
+Vidas Secas;Graciliano Ramos;1938;4
+São Bernardo;Graciliano Ramos;1934;4
+Angústia;Graciliano Ramos;1936;9
+Capitães da Areia;Jorge Amado;1937;10
+Gabriela, Cravo e Canela;Jorge Amado;1958;1
+Dona Flor e Seus Dois Maridos;Jorge Amado;1966;9
+Tieta do Agreste;Jorge Amado;1977;4
+A Hora da Estrela;Clarice Lispector;1977;9
+Perto do Coração Selvagem;Clarice Lispector;1943;7
+A Paixão Segundo G.H.;Clarice Lispector;1964;4
+Laços de Família;Clarice Lispector;1960;8
+O Cortiço;Aluísio Azevedo;1890;10
+O Mulato;Aluísio Azevedo;1881;5
+Casa de Pensão;Aluísio Azevedo;1884;1
+Iracema;José de Alencar;1865;3
+O Guarani;José de Alencar;1857;7
+Senhora;José de Alencar;1875;6
+Lucíola;José de Alencar;1862;5
+Triste Fim de Policarpo Quaresma;Lima Barreto;1915;3
+Clara dos Anjos;Lima Barreto;1948;4
+O Ateneu;Raul Pompeia;1888;6
+Macunaíma;Mário de Andrade;1928;2
+Amar, Verbo Intransitivo;Mário de Andrade;1927;2
+Memórias Sentimentais de João Miramar;Oswald de Andrade;1924;7
+Serafim Ponte Grande;Oswald de Andrade;1933;2
+O Quinze;Rachel de Queiroz;1930;6
+Memorial de Maria Moura;Rachel de Queiroz;1992;6
+Fogo Morto;José Lins do Rego;1943;10
+Menino de Engenho;José Lins do Rego;1932;5
+O Tempo e o Vento: O Continente;Erico Verissimo;1949;1
+O Tempo e o Vento: O Retrato;Erico Verissimo;1951;8
+O Tempo e o Vento: O Arquipélago;Erico Verissimo;1961;9
+Incidente em Antares;Erico Verissimo;1971;2
+Crime e Castigo;Fiódor Dostoiévski;1866;7
+Os Irmãos Karamázov;Fiódor Dostoiévski;1880;2
+O Idiota;Fiódor Dostoiévski;1869;9
+Os Demônios;Fiódor Dostoiévski;1872;5
+Noites Brancas;Fiódor Dostoiévski;1848;10
+Guerra e Paz;Liev Tolstói;1869;6
+Anna Kariênina;Liev Tolstói;1877;10
+A Morte de Ivan Ilitch;Liev Tolstói;1886;4
+Dom Quixote;Miguel de Cervantes;1605;2
+Orgulho e Preconceito;Jane Austen;1813;1
+Razão e Sensibilidade;Jane Austen;1811;4
+Emma;Jane Austen;1815;5
+Persuasão;Jane Austen;1817;2
+O Morro dos Ventos Uivantes;Emily Brontë;1847;4
+Jane Eyre;Charlotte Brontë;1847;2
+Frankenstein;Mary Shelley;1818;7
+Drácula;Bram Stoker;1897;5
+O Retrato de Dorian Gray;Oscar Wilde;1890;8
+As Aventuras de Alice no País das Maravilhas;Lewis Carroll;1865;6
+Através do Espelho;Lewis Carroll;1871;3
+O Grande Gatsby;F. Scott Fitzgerald;1925;6
+O Apanhador no Campo de Centeio;J.D. Salinger;1951;6
+O Sol é para Todos;Harper Lee;1960;4
+As Vinhas da Ira;John Steinbeck;1939;5
+Ratos e Homens;John Steinbeck;1937;2
+A Leste do Éden;John Steinbeck;1952;10
+O Velho e o Mar;Ernest Hemingway;1952;3
+Por Quem os Sinos Dobram;Ernest Hemingway;1940;9
+Adeus às Armas;Ernest Hemingway;1929;4
+Moby Dick;Herman Melville;1851;3
+As Aventuras de Huckleberry Finn;Mark Twain;1884;8
+As Aventuras de Tom Sawyer;Mark Twain;1876;7
+O Corvo e Outros Poemas;Edgar Allan Poe;1845;5
+Histórias Extraordinárias;Edgar Allan Poe;1840;9
+Fahrenheit 451;Ray Bradbury;1953;4
+Crônicas Marcianas;Ray Bradbury;1950;6
+Admirável Mundo Novo;Aldous Huxley;1932;1
+Duna;Frank Herbert;1965;4
+O Messias de Duna;Frank Herbert;1969;1
+Filhos de Duna;Frank Herbert;1976;6
+Fundação;Isaac Asimov;1951;7
+Fundação e Império;Isaac Asimov;1952;5
+Segunda Fundação;Isaac Asimov;1953;2
+Eu, Robô;Isaac Asimov;1950;4
+O Fim da Eternidade;Isaac Asimov;1955;10
+2001: Uma Odisseia no Espaço;Arthur C. Clarke;1968;6
+O Fim da Infância;Arthur C. Clarke;1953;4
+Encontro com Rama;Arthur C. Clarke;1973;8
+Neuromancer;William Gibson;1984;7
+Androides Sonham com Ovelhas Elétricas?;Philip K. Dick;1968;8
+O Homem do Castelo Alto;Philip K. Dick;1962;3
+Ubik;Philip K. Dick;1969;5
+O Guia do Mochileiro das Galáxias;Douglas Adams;1979;3
+O Restaurante no Fim do Universo;Douglas Adams;1980;4
+A Vida, o Universo e Tudo Mais;Douglas Adams;1982;9
+Harry Potter e a Pedra Filosofal;J.K. Rowling;1997;9
+Harry Potter e a Câmara Secreta;J.K. Rowling;1998;5
+Harry Potter e o Prisioneiro de Azkaban;J.K. Rowling;1999;10
+Harry Potter e o Cálice de Fogo;J.K. Rowling;2000;7
+Harry Potter e a Ordem da Fênix;J.K. Rowling;2003;10
+Harry Potter e o Enigma do Príncipe;J.K. Rowling;2005;7
+Harry Potter e as Relíquias da Morte;J.K. Rowling;2007;6
+As Crônicas de Nárnia: O Leão, a Feiticeira e o Guarda-Roupa;C.S. Lewis;1950;4
+Príncipe Caspian;C.S. Lewis;1951;3
+A Guerra dos Tronos;George R.R. Martin;1996;9
+A Fúria dos Reis;George R.R. Martin;1998;8
+A Tormenta de Espadas;George R.R. Martin;2000;2
+O Festim dos Corvos;George R.R. Martin;2005;1
+A Dança dos Dragões;George R.R. Martin;2011;2
+O Nome do Vento;Patrick Rothfuss;2007;3
+O Temor do Sábio;Patrick Rothfuss;2011;3
+O Caminho dos Reis;Brandon Sanderson;2010;7
+Palavras de Radiância;Brandon Sanderson;2014;10
+Mistborn: O Império Final;Brandon Sanderson;2006;2
+Deuses Americanos;Neil Gaiman;2001;7
+Coraline;Neil Gaiman;2002;7
+O Oceano no Fim do Caminho;Neil Gaiman;2013;10
+Belas Maldições;Neil Gaiman e Terry Pratchett;1990;8
+O Iluminado;Stephen King;1977;9
+It: A Coisa;Stephen King;1986;5
+A Torre Negra: O Pistoleiro;Stephen King;1982;9
+Carrie, a Estranha;Stephen King;1974;1
+Misery: Louca Obsessão;Stephen King;1987;2
+O Cemitério;Stephen King;1983;9
+À Espera de um Milagre;Stephen King;1996;5
+O Código Da Vinci;Dan Brown;2003;6
+Anjos e Demônios;Dan Brown;2000;2
+O Símbolo Perdido;Dan Brown;2009;5
+Inferno;Dan Brown;2013;7
+A Sombra do Vento;Carlos Ruiz Zafón;2001;3
+O Jogo do Anjo;Carlos Ruiz Zafón;2008;8
+O Prisioneiro do Céu;Carlos Ruiz Zafón;2011;1
+O Nome da Rosa;Umberto Eco;1980;5
+O Pêndulo de Foucault;Umberto Eco;1988;9
+Ensaio sobre a Cegueira;José Saramago;1995;3
+Memorial do Convento;José Saramago;1982;9
+O Evangelho Segundo Jesus Cristo;José Saramago;1991;2
+As Intermitências da Morte;José Saramago;2005;5
+A Metamorfose;Franz Kafka;1915;9
+O Processo;Franz Kafka;1925;10
+O Castelo;Franz Kafka;1926;4
+O Estrangeiro;Albert Camus;1942;3
+A Peste;Albert Camus;1947;6
+O Mito de Sísifo;Albert Camus;1942;3
+A Náusea;Jean-Paul Sartre;1938;9
+O Ser e o Nada;Jean-Paul Sartre;1943;9
+Os Miseráveis;Victor Hugo;1862;1
+O Corcunda de Notre-Dame;Victor Hugo;1831;10
+O Conde de Monte Cristo;Alexandre Dumas;1844;6
+Os Três Mosqueteiros;Alexandre Dumas;1844;8
+Madame Bovary;Gustave Flaubert;1856;1
+Em Busca do Tempo Perdido;Marcel Proust;1913;2
+A Volta ao Mundo em 80 Dias;Júlio Verne;1872;6
+Vinte Mil Léguas Submarinas;Júlio Verne;1870;5
+Viagem ao Centro da Terra;Júlio Verne;1864;4
+Da Terra à Lua;Júlio Verne;1865;1
+A Ilha Misteriosa;Júlio Verne;1875;4
+A Divina Comédia;Dante Alighieri;1320;10
+O Príncipe;Nicolau Maquiavel;1532;2
+A República;Platão;375;2
+Ética a Nicômaco;Aristóteles;340;8
+Meditações;Marco Aurélio;180;2
+Ilíada;Homero;750;9
+Odisseia;Homero;720;3
+Eneida;Virgílio;19;3
+Hamlet;William Shakespeare;1603;8
+Macbeth;William Shakespeare;1606;9
+Romeu e Julieta;William Shakespeare;1597;3
+Otelo;William Shakespeare;1603;5
+Rei Lear;William Shakespeare;1606;9
+Sonho de uma Noite de Verão;William Shakespeare;1595;10
+Fausto;Johann Wolfgang von Goethe;1808;7
+Os Sofrimentos do Jovem Werther;Johann Wolfgang von Goethe;1774;4
+Assim Falou Zaratustra;Friedrich Nietzsche;1883;9
+Além do Bem e do Mal;Friedrich Nietzsche;1886;4
+A Interpretação dos Sonhos;Sigmund Freud;1899;5
+O Mal-Estar na Civilização;Sigmund Freud;1930;7
+Sapiens: Uma Breve História da Humanidade;Yuval Noah Harari;2011;6
+Homo Deus: Uma Breve História do Amanhã;Yuval Noah Harari;2015;8
+21 Lições para o Século 21;Yuval Noah Harari;2018;9
+Uma Breve História do Tempo;Stephen Hawking;1988;8
+Cosmos;Carl Sagan;1980;2
+O Mundo Assombrado pelos Demônios;Carl Sagan;1995;4
+A Origem das Espécies;Charles Darwin;1859;4
+O Gene Egoísta;Richard Dawkins;1976;2
+Rápido e Devagar: Duas Formas de Pensar;Daniel Kahneman;2011;6
+O Poder do Hábito;Charles Duhigg;2012;1
+Hábitos Atômicos;James Clear;2018;10
+O Alquimista;Paulo Coelho;1988;9
+Brida;Paulo Coelho;1990;4
