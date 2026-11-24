@@ -105,17 +105,25 @@ uint64_t newID(uint64_t* ref, uint64_t* p ,uint64_t* n, uint64_t* cont){
     (*n)++;
     return *ref - *n;
 }
+
+// Handles date operations, validation, loan periods, and overdue checks.
+
 int yearLeap(int year){
     return (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0));
 }
 Date* returnDate(int day, int month,int year){
     int day1 = day,month1 = month, year1 = year; 
-    int diasMes[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int diasMes[] = { 0, 31, 28, 31, 30, 31, 30, 31, 30, 31, 30, 31};
+
     Date* end = malloc(sizeof(Date));
+
+    if(end == NULL){
+        return NULL;
+    }
+
     if(yearLeap(year)){
         diasMes[2] = 29;
     }
-
     day1 += 10;
 
     while(day1 > diasMes[month1]){
@@ -134,6 +142,7 @@ Date* returnDate(int day, int month,int year){
     end -> year = year1; 
     return end;
 }
+
 int dateToDays(int day, int month, int year){
     int diasMes[] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
@@ -163,62 +172,5 @@ void printDate(Date* day){
     printf("%02d/%02d/%04d ",day -> day, day -> month, day ->year);
 
 }
-/* 
 
-void BSTuserDe(userTree *root, User *member, Book *item){
-    if(root == NULL){
-        return;
-    }
-    int comp = strcmp(root -> data -> gmail, member -> gmail);
-    if(comp == 0){
-        returnLoanUser(root -> wardenB,item);
-        return;
-    }
-    if(comp > 0){
-        BSTuserDe(root -> left,member, item);
-    }else{
-        if(comp < 0){
-            BSTuserDe(root -> right,member, item);
-        }
-        return;
-    }
- }
- void BSTBookDe(treeBook *root, Book *element, User *item){
-     if(root == NULL){
-        return;
-    }
-    if(root ->data ->id == element -> id){
-        returnLoanBook(root -> wardenU,item);
-        return;
-    }
-    if(root ->data ->id > element -> id){
-        BSTBookDe(root -> left,element, item);
-    }else{
-        if(root ->data -> id < element -> id){
-            BSTBookDe(root -> right,element, item);
-        }
-        return;
-    }
-}
-void removeAllBook(WDogBook *copUs,Book *tome, treeBook* rootBo){
-    ListD_E_Book *aux = copUs ->first, *ant;
-    while (aux != NULL){
-        ant = aux;
-        aux = aux -> next;
-        //criar uma função de BST para buscar os livros empresatdos para usuário
-        //passo os dados do usuário para procurar na árvore depois ocupa os dados 
-        //do livro para fazer a remoção na lista encadeada para depois remover na outra lista
-        BSTBookDe( rootBo, tome, ant->data);
-        returnLoanBook(copUs,ant->data);
-    }
-}
-void removeAllUser(WDogUser *copBo,User* people, userTree* rootUs){
-    ListD_E_user *aux = copBo ->first, *ant;
-    while (aux != NULL){
-        ant = aux;
-        aux = aux -> next;
-        BSTuserDe(rootUs, people, ant->data);
-        returnLoanUser(copBo, ant->data);
-    }
-} */
 #endif

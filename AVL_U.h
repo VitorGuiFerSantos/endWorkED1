@@ -8,14 +8,14 @@
 #include <inttypes.h>
 #include "listEnB.h"
 #include "listEnU.h"
-
+//return height
 int heightUser(userTree* root){
     if(root == NULL){
         return 0;
     }
     return root->height;
 }
-
+//factor balance
 int getBalanceUser(userTree* root){
     if(root == NULL){
         return 0;
@@ -23,6 +23,7 @@ int getBalanceUser(userTree* root){
     return heightUser(root -> left) - heightUser(root -> right);
 }
 
+//rotate for right
 userTree* rotateRightU(userTree* root){
     userTree* aux = root -> left;
     userTree* temp = aux -> right; 
@@ -35,6 +36,7 @@ userTree* rotateRightU(userTree* root){
     return aux;
 }
 
+//rotate for left
 userTree* rotateLeftU(userTree* root){
     userTree* aux = root -> right;
     userTree* temp = aux -> left; 
@@ -48,6 +50,7 @@ userTree* rotateLeftU(userTree* root){
     return aux;
 }
 
+//Condition for AVL both for insertion or deletion
 userTree* balanceUser(userTree *root){
     int fb = getBalanceUser(root);
     int baler = getBalanceUser(root -> left), balel = getBalanceUser(root -> right);
@@ -93,11 +96,11 @@ userTree *creatUser(userTree* rootU){
     userTree* new = malloc( sizeof (userTree));
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
-    printf("\nNome do novo usuário:");
+    printf("\n\t\t Nome do novo usuário:");
     fgets(newdata -> member,MAXchar-1,stdin); 
     newdata -> member[strcspn(newdata ->member,"\n")] = 0;
 
-    printf("\nRegistre o e-mail do usuário:");
+    printf("\n\t\t Registre o e-mail do usuário:");
     fgets(newdata -> gmail,MAXchar-1,stdin); 
     newdata -> gmail[strcspn(newdata ->gmail,"\n") ] = 0;
 
@@ -106,23 +109,24 @@ userTree *creatUser(userTree* rootU){
     while (temp !=NULL){
         int option = 0;
         memset(newdata -> gmail, 0, sizeof(MAXchar));
-        printf("\n E-mail já cadastrado! Deseja continuar? ");
-        printf("\n ( 1 ) Sim");
-        printf("\n ( 2 ) Não");
-        printf("\n Qual opção: ");
+        printf("\n\t\t E-mail já cadastrado! Deseja continuar? ");
+        printf("\n\t\t ( 1 ) Sim");
+        printf("\n\t\t ( 2 ) Não");
+        printf("\n\t\t Qual opção: ");
         if(scanf("%d", &option) != 1){
             printf("\n\t\t Entrada inválida! Digite um número.");
+            printf("\n\t\t Qual opção: ");
             while(getchar() != '\n');
             continue;
         }
         if(option == 1){
             while ((c = getchar()) != '\n' && c != EOF);
-            printf("\n Registre o e-mail do não cadastrado: ");
+            printf("\n\t\t Registre o e-mail não cadastrado: ");
             fgets(newdata -> gmail,MAXchar-1,stdin); 
             newdata -> gmail[strcspn(newdata ->gmail,"\n") ]= 0;
             temp = searchCopyUser(rootU,newdata -> gmail);
         }else{
-            printf("\n Operação cancelada");
+            printf("\n\t\t Operação cancelada");
             free(new);
             free(newdata);
             return NULL;
@@ -214,9 +218,9 @@ userTree* deleteUser(userTree* root, char gmail[]){
 void printTreeUser(userTree* nodo){
     if(nodo == NULL) return;
 
-    printf("\n | Nome: %s\t\t | ",nodo ->data -> member);
-    printf("\n | E-mail: %s\t | ",nodo ->data -> gmail);
-    printf("\n | Livros retirados: %d\t | \n",nodo ->data -> books);
+    printf("\n | Nome: %s  ",nodo ->data -> member);
+    printf("\n | E-mail: %s ",nodo ->data -> gmail);
+    printf("\n | Livros retirados: %d \n",nodo ->data -> books);
 }
 
 //output users  with same name 

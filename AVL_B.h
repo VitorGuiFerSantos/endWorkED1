@@ -5,13 +5,14 @@
 #include "listEnU.h"
 #include <inttypes.h>
 #include <limits.h> 
+//return height
 int heightBook(treeBook* root){
     if(root == NULL){
         return 0;
     }
     return root->height;
 }
-
+//factor balance
 int getBalanceBook(treeBook* root){
     if(root == NULL){
         return 0;
@@ -19,7 +20,7 @@ int getBalanceBook(treeBook* root){
     return heightBook(root -> left) - heightBook(root -> right);
 }
 
-//rotate
+//rotate for right
 treeBook* rotateRightB(treeBook* root){
     //the treeBook take on the root
     treeBook* aux = root -> left;
@@ -36,7 +37,7 @@ treeBook* rotateRightB(treeBook* root){
     //aux take on the roles father thas subtree
     return aux;
 }
-
+//rotate for left
 treeBook* rotateLeftB(treeBook* root){
 
     treeBook* aux = root->right;
@@ -98,11 +99,11 @@ treeBook *creatBook(uint64_t id){
     treeBook *new = malloc( sizeof ( treeBook ) );
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
-    printf("\n Nome do livro: ");
+    printf("\n\t\t Nome do livro: ");
     fgets(newdata -> title,MAXchar-1,stdin); 
     newdata -> title[strcspn(newdata -> title,"\n") ]= 0;
     
-    printf("\n Autor do livro: ");
+    printf("\n\t\t Autor do livro: ");
     fgets(newdata -> author,MAXchar-1,stdin); 
     newdata -> author[strcspn(newdata -> author,"\n") ]= 0;
     while(1){
@@ -113,6 +114,7 @@ treeBook *creatBook(uint64_t id){
         }
 
         printf("\n\t\t Entrada inválida! Digite um número.");
+        printf("\n\t\t Informe o ano de livros: ");
 
         while((c = getchar()) != '\n' && c != EOF);
     }
@@ -124,6 +126,7 @@ treeBook *creatBook(uint64_t id){
         }
 
         printf("\n\t\t Entrada inválida! Digite um número.");
+        printf("\n\t\t Informe a quantidade de livros: ");
 
         while((c = getchar()) != '\n' && c != EOF);
     }
@@ -160,11 +163,11 @@ treeBook *creatBook(uint64_t id){
 }
 
 //delete elements of arbor
-treeBook *deleteBook(treeBook *root, int id){
+treeBook *deleteBook(treeBook *root, uint64_t id){
    if(root == NULL){
        return root;
     }
-   int id1 = root -> data -> id; 
+   uint64_t id1 = root -> data -> id; 
    if(id1  < id){
        root -> right = deleteBook(root -> right, id);
    }else{
@@ -212,12 +215,12 @@ treeBook *deleteBook(treeBook *root, int id){
 void printTreeBook(treeBook* nodo){
     if(nodo == NULL) return;
 
-    printf(" \n\t\t | ID: %" PRIu64 "\t\t\t\t | ",nodo ->data -> id);
-    printf(" \n\t\t | Título: %s \t\t\t\t | ",nodo ->data -> title);
-    printf(" \n\t\t | Autor: %s \t\t\t\t | ",nodo ->data -> author);
-    printf(" \n\t\t | Ano de publicação: %d \t\t | ",nodo ->data -> year);
-    printf(" \n\t\t | Cópias: %d \t\t\t\t | ",nodo ->data -> amount);
-    printf(" \n\t\t | Copias retiradas: %d \t\t\t | \n",nodo ->data -> amountLent);
+    printf(" \n\t\t | ID: %" PRIu64 ,nodo ->data -> id);
+    printf(" \n\t\t | Título: %s ",nodo ->data -> title);
+    printf(" \n\t\t | Autor: %s ",nodo ->data -> author);
+    printf(" \n\t\t | Ano de publicação: %d  ",nodo ->data -> year);
+    printf(" \n\t\t | Cópias: %d  ",nodo ->data -> amount);
+    printf(" \n\t\t | Copias retiradas: %d \n",nodo ->data -> amountLent);
 }
 //search id and return one copy
 treeBook* searchIdBook(treeBook* rootB, uint64_t id){
@@ -262,7 +265,7 @@ void inOrderB(treeBook *aux){
 treeBook *registerBooksFile(treeBook *root, char filename[], uint64_t *ref, uint64_t *idP, uint64_t *ipN, uint64_t *control){
     FILE *file = fopen(filename,"r");
     if(file == NULL){
-        printf("\n Não foi possível abrir o arquivo!");
+        printf("\n\t\t Não foi possível abrir o arquivo!");
         return root;
     }
 
@@ -349,10 +352,10 @@ treeBook *registerBooksFile(treeBook *root, char filename[], uint64_t *ref, uint
 
     fclose(file);
 
-    printf("\n\t\tCadastro por arquivo concluído!");
-    printf("\n\t\tLivros cadastrados: %d",registered);
-    printf("\n\t\tQuantidade atualizada: %d",updated);
-    printf("\n\t\tLinhas inválidas: %d\n",invalid);
+    printf("\n\t\t Cadastro por arquivo concluído!");
+    printf("\n\t\t Livros cadastrados: %d",registered);
+    printf("\n\t\t Quantidade atualizada: %d",updated);
+    printf("\n\t\t Linhas inválidas: %d\n",invalid);
     sleep(1);
     return root;
 }

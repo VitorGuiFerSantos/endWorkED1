@@ -22,7 +22,9 @@ WDogBook *creatWardenBook(){
 ListD_E_Book *createLoanBook(Date* newdateS,Date* newdateE, Book* data){
     ListD_E_Book* new = malloc(sizeof(ListD_E_Book));
 
-    
+    if(new == NULL){
+        return NULL;
+    }
     new -> loanSt = newdateS;
     new -> loanEnd = newdateE;
     
@@ -36,7 +38,8 @@ ListD_E_Book *createLoanBook(Date* newdateS,Date* newdateE, Book* data){
     return new;
     
 }
-
+// Doubly linked list implementation for managing loan records.
+// Manages book loans, returns, and renewals.
 void addLoanBook(WDogBook* guardU,ListD_E_Book* new){
     if(guardU -> first == NULL){
         guardU -> first = new;
@@ -72,6 +75,7 @@ void addLoanBook(WDogBook* guardU,ListD_E_Book* new){
     aux -> prev -> next = new;
     aux -> prev = new;
 }
+
 ListD_E_Book *returnBook(WDogBook* wardenU, uint64_t id){
     if(wardenU -> first == NULL){
         return NULL;
@@ -116,22 +120,22 @@ void returnLoanBook(WDogBook *copBK,ListD_E_Book* tome){
 }
 void printWDogBook(WDogBook* wardenB){
     if(wardenB ->first == NULL){
-        printf("\n Nenhum livro retirado \n");
+        printf("\n\t\t Nenhum livro retirado \n");
 
         return;
     }
     ListD_E_Book* aux = wardenB ->first;
     printf("\n +----------------------------------+ \n");
     for(;aux!=NULL;aux = aux -> next){
-        printf(" \n\t\t | ID: %"PRIu64" \t\t |",aux ->data -> id);
-        printf(" \n\t\t | Título: %s \t |",aux ->data -> title);
-        printf(" \n\t\t | Autor: %s \t\t |",aux ->data -> author);
-        printf(" \n\t\t | Ano de publicação: %d\t\t |",aux ->data -> year);
+        printf(" \n\t\t | ID: %"PRIu64" \t\t ",aux ->data -> id);
+        printf(" \n\t\t | Título: %s \t ",aux ->data -> title);
+        printf(" \n\t\t | Autor: %s \t\t ",aux ->data -> author);
+        printf(" \n\t\t | Ano de publicação: %d\t\t ",aux ->data -> year);
         printf(" \n\t\t |  Data retirada: ");
         printDate(aux ->loanSt);
-        printf("\t\t|\n\t\t| Data devolução:");
+        printf("\n\t\t | Data devolução:");
         printDate(aux ->loanEnd);
-        printf("\t\t|\n");
+        printf("\n");
     }
     printf("\n +-----------------------------------+ \n");
 }

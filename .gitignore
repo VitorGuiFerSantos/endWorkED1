@@ -2,6 +2,6 @@ test.exe
 .dll
 .class
 .o
-test.txt
+#test.txt
 hoje.out
-usuarios.txt
+#usuarios.txt

@@ -22,6 +22,9 @@ WDogUser *creatWardenUser(){
 }
 ListD_E_user *createLoanUser(Date* newdateS,Date* newdateE, User* data){
     ListD_E_user* new = malloc(sizeof(ListD_E_user));
+        if(new == NULL){
+        return NULL;
+    }
 
     new -> loanSt = newdateS;
     new -> loanEnd = newdateE;
@@ -35,6 +38,8 @@ ListD_E_user *createLoanUser(Date* newdateS,Date* newdateE, User* data){
     
     return new;
 }
+// Doubly linked list implementation for managing loan records.
+// Manages book loans, returns, and renewals.
 void addLoanUser(WDogUser* guardU,ListD_E_user* new){
     if(guardU -> first == NULL){
         guardU -> first = new;
@@ -70,6 +75,7 @@ void addLoanUser(WDogUser* guardU,ListD_E_user* new){
     aux -> prev -> next = new;
     aux -> prev = new;
 }
+
 
 ListD_E_user *returnUser(WDogUser* wardenU, char gmail[]){
     if(wardenU -> first == NULL){
@@ -122,8 +128,8 @@ void printWDogUser(WDogUser* wardenU){
     ListD_E_user* aux = wardenU ->first;
     printf("\n +----------------------------------+ \n");
     for(;aux!=NULL;aux = aux -> next){
-        printf("\n | Nome: %s \t\t |",aux ->data -> member);
-        printf("\n | E-mail: %s \t |",aux ->data -> gmail);
+        printf("\n | Nome: %s  ",aux ->data -> member);
+        printf("\n | E-mail: %s ",aux ->data -> gmail);
     }
     printf("\n +-----------------------------------+ \n");
 }
